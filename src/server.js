@@ -21,4 +21,4 @@ app.get('/', function(req, res) {
 // start the server ======
 // =======================
 app.listen(port);
-console.log('Magic happens at http://localhost:' + port);
+console.log('Magic  happens at http://localhost:' + port);

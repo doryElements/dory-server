@@ -4,6 +4,9 @@
   "description": "Dory Server back end",
   "main": "src/server.js",
   "scripts": {
+    "run": "node src/server.js",
+    "dev": "nodemon src/server.js -w src",
+    "install": "npm install -g  nodemon",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -21,5 +24,8 @@
     "body-parser": "^1.17.2",
     "express": "^4.15.3",
     "jsonwebtoken": "^7.4.1"
+  },
+  "devDependencies": {
+    "nodemon": "^1.11.0"
   }
 }
