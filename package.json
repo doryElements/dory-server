@@ -1,0 +1,25 @@
+{
+  "name": "dory-server",
+  "version": "1.0.0",
+  "description": "Dory Server back end",
+  "main": "src/server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://gitlab-dei/dory/dory-server.git"
+  },
+  "keywords": [
+    "Dory",
+    "back",
+    "end"
+  ],
+  "author": "Agrica",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.17.2",
+    "express": "^4.15.3",
+    "jsonwebtoken": "^7.4.1"
+  }
+}
