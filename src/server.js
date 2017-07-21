@@ -1,7 +1,6 @@
 'use strict';
-
 const express = require('express');
-const bodyParser  = require('body-parser');
+const bodyParser = require('body-parser');
 const cors = require('cors');
 
 // const jwt = require("jwt-simple");
@@ -16,18 +15,20 @@ const morgan = require('morgan');
 const rfs = require('rotating-file-stream');
 
 // Deps
-const User = require("./users.js");
 const cfg = require("./config.js");
 // Instanciate
 const app = express();
 const port = process.env.PORT || 8181;
+
+const users = require('./routes/users');
+const User = require("./models/users.js");
 
 
 // =======================
 // === Express Config
 // =======================
 // Log config
-const logDirectory = path.join(__dirname, 'log');
+const logDirectory = path.join(__dirname, '..', 'log');
 // create a rotating write stream
 const accessLogStream = rfs('access.log', {
     interval: '1d', // rotate daily
@@ -48,7 +49,7 @@ const options = {
     type: 'application/json'
 };
 app.use(bodyParser.json(options));
-app.use(bodyParser.urlencoded({ extended: false })); // Parses urlencoded bodies
+app.use(bodyParser.urlencoded({extended: false})); // Parses urlencoded bodies
 app.disable('x-powered-by');
 
 
@@ -56,44 +57,73 @@ app.disable('x-powered-by');
 // routes
 // =======================
 // basic route
-app.get('/',  (req, res) =>  {
+app.get('/', (req, res) => {
     res.json({
         status: "My API is alive!"
     });
 });
 
-app.get("/user", auth.authenticate(), function(req, res) {
-    console.log('req keys', Object.keys(req));
-    console.log('req authInfo',req.authInfo);
-    res.json({ message: 'ok', user: req.user, jwt: req.authInfo });
-    // res.json(users[req.user.id]);
+app.get('/init', (req, res) => {
+    User.initIndexUser()
+        .then(result =>   User.users.map(user =>  User.addUser(user) ) )
+        .then(promises => Promise.all(promises))
+        .then(results => res.json(results))
+        .catch(err => res.status(500).json(err));
 });
 
-app.post("/token", function(req, res) {
+
+app.use('/user',  auth.authenticate(), users);
+app.use('/sam',  auth.authenticate(), users);
+
+// app.get("/user", auth.authenticate(), function (req, res) {
+//     // console.log('req keys', Object.keys(req));
+//     // console.log('req authInfo',req.authInfo);
+//     res.json({message: 'ok', user: req.user, jwt: req.authInfo});
+//     // res.json(users[req.user.id]);
+// });
+app.post("/login", auth.authenticateLocal(), function (req, res) {
+    const payload = req.authInfo;
+        console.log('req user',req.user);
+        console.log('req authInfo',req.authInfo);
+        const token = jwt.sign(payload, cfg.jwtSecret);
+        res.json({
+            message: "ok",
+            token: token
+        });
+})
+
+app.post("/token", function (req, res) {
     if (req.body.email && req.body.password) {
         const email = req.body.email;
         const password = req.body.password;
-        const user = User.findByEmail({email});
-        if( ! user ){
-            res.status(401).json({message:"no such user found"});
-        }
-        if (user.private.password === password) {
-            const payload = {
-                 jit: uuidv4(),
-                iss: "dory-server",
-                sub: user.id,
-                aud: "dory",
-                name: user.name,
-                email: user.email
-            };
-            const token = jwt.sign(payload, cfg.jwtSecret);
-            res.json({
-                massage: "ok",
-                token: token
-            });
-        } else {
-            res.sendStatus(401).json({ message:"Password did not match"} );
-        }
+        const user = User.getByEmail({email, secured: true}).then(user => {
+            if (!user) {
+                return res.status(401).json({message: "no such user found"});
+            }
+            return user;
+        }).then(user => {
+            if (user.secured.password === password) {
+                const payload = {
+                    jit: uuidv4(),
+                    iss: "dory-server",
+                    sub: user.id,
+                    aud: "dory",
+                    name: user.name,
+                    email: user.email
+                };
+                const token = jwt.sign(payload, cfg.jwtSecret);
+                return res.json({
+                    message: "ok",
+                    token: token
+                });
+            } else {
+                return res.sendStatus(401).json({message: "Password did not match"});
+            }
+        }).catch(err => {
+            return res.sendStatus(401);
+        });
+
+
     } else {
         res.sendStatus(401);
     }

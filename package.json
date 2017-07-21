@@ -5,8 +5,8 @@
   "main": "src/server.js",
   "scripts": {
     "run": "node src/server.js",
-    "dev": "nodemon src/server.js -w src",
-    "install": "npm install -g  nodemon",
+    "dev": "nodemon -w src src/server.js",
+    "dev-install": "npm install -g nodemon",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -23,12 +23,15 @@
   "dependencies": {
     "body-parser": "^1.17.2",
     "cors": "^2.8.4",
+    "elastic-builder": "^1.0.2",
+    "elasticsearch": "^13.2.0",
     "express": "^4.15.3",
     "jsonwebtoken": "^7.4.1",
     "jwt-simple": "^0.5.1",
     "morgan": "^1.8.2",
     "passport": "^0.3.2",
     "passport-jwt": "^2.2.1",
+    "passport-local": "^1.0.0",
     "rotating-file-stream": "^1.2.2",
     "uuid": "^3.1.0"
   },

@@ -3,7 +3,10 @@
 .idea
 *.iml
 
+# Logs
+/log
+*.log
+
 # Node
 bower_components
 node_modules
-*.log

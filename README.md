@@ -20,6 +20,7 @@ curl -H "Content-Type: application/json" -X POST -d '{"email":"john@mail.com","p
 * Passport : http://passportjs.org/
 * Passport JWT : https://blog.jscrambler.com/implementing-jwt-using-passport/
  
+* Sample ES : https://blog.raananweber.com/2015/11/24/simple-autocomplete-with-elasticsearch-and-node-js/
  
 ## Logging File
 * https://www.loggly.com/ultimate-guide/node-logging-basics/
