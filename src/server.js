@@ -65,7 +65,7 @@ app.get('/',  (req, res) =>  {
 app.get("/user", auth.authenticate(), function(req, res) {
     console.log('req keys', Object.keys(req));
     console.log('req authInfo',req.authInfo);
-    res.json({ message: 'ok', user: req.user.profile, jwt: req.authInfo });
+    res.json({ message: 'ok', user: req.user, jwt: req.authInfo });
     // res.json(users[req.user.id]);
 });
 
