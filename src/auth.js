@@ -34,7 +34,7 @@ const cleanUserSecured =function (user) {
     return cloneUser;
 };
 
-const strategyValidateUsernamePassword= (email, password, done) => {
+const strategyValidateUsernamePassword= (req, email, password, done) => {
     console.log('strategyLocal', email);
     User.getByEmail({email, secured: true}).then(user => {
         if (!user) {
@@ -51,6 +51,7 @@ const strategyValidateUsernamePassword= (email, password, done) => {
             name: user.name,
             email: user.email
         };
+
         const secureUser = cleanUserSecured(user);
         return done(null, secureUser,payload);
     }).catch(err=> {
@@ -77,7 +78,7 @@ module.exports = function() {
             // }
     });
 
-    const strategyLocal = new LocalStrategy(strategyValidateUsernamePassword);
+    const strategyLocal = new LocalStrategy({ passReqToCallback: true }, strategyValidateUsernamePassword);
     passport.use('local', strategyLocal);
     passport.use(strategyJwt);
     return {

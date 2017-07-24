@@ -8,7 +8,6 @@ router.get('/:id',  (req, res, next) => {
     Sam.getById({id}).then(result=> {
         res.json(result);
     });
-    res.json({message: 'ok', user: req.user, jwt: req.authInfo});
 });
 
 router.put('/:id',  (req, res, next) => {
@@ -29,7 +28,8 @@ router.delete('/:id',  (req, res, next) => {
 });
 
 router.post('/',  (req, res, next) => {
-    res.json({message: 'create'});
+    const body = req.body;
+    res.json({message: 'create', body});
 });
 
 
