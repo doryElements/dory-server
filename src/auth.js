@@ -5,7 +5,7 @@ const passportJWT = require("passport-jwt");
 
 const uuidv4 = require('uuid/v4');
 
-const User = require("./models/users.js");
+const User = require("./models/user.js");
 const cfg = require("./config.js");
 
 const ExtractJwt = passportJWT.ExtractJwt;

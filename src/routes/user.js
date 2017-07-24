@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-const User = require('../models/users');
+const User = require('../models/user');
 
 router.get('/',  (req, res, next) => {
     // console.log('req keys', Object.keys(req));
