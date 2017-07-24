@@ -26,6 +26,7 @@ const routeSam = require('./routes/sam');
 
 const User = require("./models/users");
 
+// const parser = require('./CSV-parse');
 
 // =======================
 // === Express Config
@@ -78,7 +79,7 @@ app.disable('x-powered-by');
 // basic route
 app.get('/', (req, res) => {
     res.json({
-        status: "My API is alive!"
+        status: "It's Alive! My API is alive!"
     });
 });
 
@@ -94,7 +95,7 @@ app.post("/login", auth.authenticateLocal(), function (req, res) {
             message: "ok",
             token: token
         });
-})
+});
 
 // app.post("/token", function (req, res) {
 //     if (req.body.email && req.body.password) {
