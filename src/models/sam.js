@@ -69,8 +69,7 @@ const createSam = function (sam) {
     const id = sam.id;
     delete sam.id;
     return client.index({
-        index: indexName,
-        type: indexType,
+        index: indexName, type: indexType,
         body: sam
     }).then(result => {
         const parsedResult = {
@@ -98,10 +97,8 @@ const createSam = function (sam) {
  */
 const updateSam = function (sam, id, version) {
     return client.index({
-        index: indexName,
-        type: indexType,
-        id: id,
-        version: version,
+        index: indexName, type: indexType,
+        id: id,  version: version,
         body: sam
     }).then(result => {
         console.log('update result : ', result);
@@ -115,10 +112,8 @@ const updateSam = function (sam, id, version) {
 
 const deleteSam = function (id, version) {
     return client.delete({
-        index: indexName,
-        type: indexType,
-        id: id,
-        version: version
+        index: indexName, type: indexType,
+        id: id, version: version
     }).then(result => {
         console.log(result);
         return result;
