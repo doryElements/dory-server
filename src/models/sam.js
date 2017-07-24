@@ -38,15 +38,26 @@ const getById = function ({id, secured}) {
     return client.get(defaultOpt({id, secured})).then(adaptModel).catch(manageError);
 }
 
-const addSam = function (sam) {
+const createSam = function (sam) {
     const id = sam.id;
     delete sam.id;
     return client.index({
         index: indexName,
         type: indexType,
         id: id,
-        body: user
+        body: sam
+    });
+};
+
+const deleteSam = function (id, version) {
+    return client.delete({
+        index: indexName,
+        type: indexType,
+        id: id,
+        version: version
     });
 };
 
 exports.getById = getById;
+exports.createSam = createSam;
+exports.deleteSam = deleteSam;

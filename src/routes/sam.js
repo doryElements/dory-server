@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 
-const Sam = require('../models/sams');
+const Sam = require('../models/sam');
 
 router.get('/:id',  (req, res, next) => {
     const id= req.params.id;
