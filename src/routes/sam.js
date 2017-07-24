@@ -15,8 +15,9 @@ router.put('/:id',  (req, res, next) => {
    const id= req.params.id;
    const queryString = req.query;
    const version = queryString.version;
+   const body = req.body;
     // TODO manage ?version=   =>const version = ??;
-    res.json({message: 'update', id, version});
+    res.json({message: 'update', id, version, body});
 });
 
 

@@ -57,6 +57,22 @@ app.disable('x-powered-by');
 
 
 // =======================
+// Tokens
+// =======================
+// app.use(function(req, res, next){
+//     res.on('close', function(){
+//         const payload = req.authInfo;
+//         console.log('---------------- = req.authInfo', payload);
+//         if (payload) {
+//             const token = jwt.sign(payload, cfg.jwtSecret);
+//             console.log("---------------- Set header token  " + token); // for example
+//             res.set('access_token ', token);
+//         }
+//     });
+//     next();
+// });
+
+// =======================
 // routes
 // =======================
 // basic route
