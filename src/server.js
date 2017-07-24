@@ -20,8 +20,11 @@ const cfg = require("./config.js");
 const app = express();
 const port = process.env.PORT || 8181;
 
-const users = require('./routes/users');
-const User = require("./models/users.js");
+const routeProfile = require('./routes/profile');
+const routeUser = require('./routes/user');
+const routeSam = require('./routes/sam');
+
+const User = require("./models/users");
 
 
 // =======================
@@ -63,28 +66,13 @@ app.get('/', (req, res) => {
     });
 });
 
-app.get('/init', (req, res) => {
-    User.initIndexUser()
-        .then(result =>   User.users.map(user =>  User.addUser(user) ) )
-        .then(promises => Promise.all(promises))
-        .then(results => res.json(results))
-        .catch(err => res.status(500).json(err));
-});
+app.use('/user', routeUser);
+app.use('/profile',  auth.authenticate(), routeProfile);
+app.use('/sam',  auth.authenticate(), routeSam);
 
 
-app.use('/user',  auth.authenticate(), users);
-app.use('/sam',  auth.authenticate(), users);
-
-// app.get("/user", auth.authenticate(), function (req, res) {
-//     // console.log('req keys', Object.keys(req));
-//     // console.log('req authInfo',req.authInfo);
-//     res.json({message: 'ok', user: req.user, jwt: req.authInfo});
-//     // res.json(users[req.user.id]);
-// });
 app.post("/login", auth.authenticateLocal(), function (req, res) {
     const payload = req.authInfo;
-        console.log('req user',req.user);
-        console.log('req authInfo',req.authInfo);
         const token = jwt.sign(payload, cfg.jwtSecret);
         res.json({
             message: "ok",
@@ -92,42 +80,42 @@ app.post("/login", auth.authenticateLocal(), function (req, res) {
         });
 })
 
-app.post("/token", function (req, res) {
-    if (req.body.email && req.body.password) {
-        const email = req.body.email;
-        const password = req.body.password;
-        const user = User.getByEmail({email, secured: true}).then(user => {
-            if (!user) {
-                return res.status(401).json({message: "no such user found"});
-            }
-            return user;
-        }).then(user => {
-            if (user.secured.password === password) {
-                const payload = {
-                    jit: uuidv4(),
-                    iss: "dory-server",
-                    sub: user.id,
-                    aud: "dory",
-                    name: user.name,
-                    email: user.email
-                };
-                const token = jwt.sign(payload, cfg.jwtSecret);
-                return res.json({
-                    message: "ok",
-                    token: token
-                });
-            } else {
-                return res.sendStatus(401).json({message: "Password did not match"});
-            }
-        }).catch(err => {
-            return res.sendStatus(401);
-        });
-
-
-    } else {
-        res.sendStatus(401);
-    }
-});
+// app.post("/token", function (req, res) {
+//     if (req.body.email && req.body.password) {
+//         const email = req.body.email;
+//         const password = req.body.password;
+//         const user = User.getByEmail({email, secured: true}).then(user => {
+//             if (!user) {
+//                 return res.status(401).json({message: "no such user found"});
+//             }
+//             return user;
+//         }).then(user => {
+//             if (user.secured.password === password) {
+//                 const payload = {
+//                     jit: uuidv4(),
+//                     iss: "dory-server",
+//                     sub: user.id,
+//                     aud: "dory",
+//                     name: user.name,
+//                     email: user.email
+//                 };
+//                 const token = jwt.sign(payload, cfg.jwtSecret);
+//                 return res.json({
+//                     message: "ok",
+//                     token: token
+//                 });
+//             } else {
+//                 return res.sendStatus(401).json({message: "Password did not match"});
+//             }
+//         }).catch(err => {
+//             return res.sendStatus(401);
+//         });
+//
+//
+//     } else {
+//         res.sendStatus(401);
+//     }
+// });
 
 // =======================
 // start the server ======
