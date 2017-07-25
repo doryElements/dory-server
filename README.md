@@ -24,3 +24,8 @@ curl -H "Content-Type: application/json" -X POST -d '{"email":"john@mail.com","p
  
 ## Logging File
 * https://www.loggly.com/ultimate-guide/node-logging-basics/
+
+
+# Elasticsearch
+
+* Resilience : https://www.elastic.co/guide/en/elasticsearch/resiliency/current/index.html

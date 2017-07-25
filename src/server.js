@@ -24,7 +24,7 @@ const routeProfile = require('./routes/profile');
 const routeUser = require('./routes/user');
 const routeSam = require('./routes/sam');
 
-const User = require("./models/users");
+const User = require("./models/user");
 
 // const parser = require('./CSV-parse');
 
@@ -83,9 +83,9 @@ app.get('/', (req, res) => {
     });
 });
 
-app.use('/user', routeUser);
+app.use('/users', routeUser);
 app.use('/profile',  auth.authenticate(), routeProfile);
-app.use('/sam',  auth.authenticate(), routeSam);
+app.use('/sams',  auth.authenticate(), routeSam);
 
 
 app.post("/login", auth.authenticateLocal(), function (req, res) {

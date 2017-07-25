@@ -50,7 +50,10 @@ module.exports = function({index, mapping}) {
 
 
     const manageError = function (err) {
-        console.log('err:', err);
+        const error = new Error(err.message);
+        error.status = err.status;
+        console.error('err:', err);
+        throw  error;
     };
 
 
