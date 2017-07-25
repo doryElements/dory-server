@@ -36,7 +36,7 @@ class SamModel extends ElasticModel {
 }
 
 const model = new SamModel();
-model.foo();
+// model.foo();
 
 const defaultOpt = function (opt, secured) {
     opt.index = indexName;

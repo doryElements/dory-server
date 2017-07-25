@@ -21,6 +21,7 @@
   "author": "Agrica",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^1.0.2",
     "body-parser": "^1.17.2",
     "cors": "^2.8.4",
     "elastic-builder": "^1.0.2",

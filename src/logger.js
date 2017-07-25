@@ -1,4 +1,5 @@
 const winston = require('winston');
+const config = require('./config');
 require('winston-daily-rotate-file');
 
 const fs = require('fs');
@@ -23,7 +24,7 @@ winston.addColors({
 const logger = new winston.Logger({
     transports: [
         new (winston.transports.Console)({
-            level: 'silly',
+            level: 'trace',
             handleExceptions: true,
             prettyPrint: true,
             silent: false,
@@ -50,7 +51,7 @@ const logger = new winston.Logger({
             json: false
         })
     ],
-    levels: {error: 0, warn: 1, info: 2, verbose: 3, debug: 4, silly: 5}
+    levels: {error: 0, warn: 1, info: 2, verbose: 3, debug: 4, trace: 5}
 });
 
 
