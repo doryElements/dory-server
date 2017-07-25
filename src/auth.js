@@ -35,7 +35,7 @@ const cleanUserSecured =function (user) {
 };
 
 const strategyValidateUsernamePassword= (req, email, password, done) => {
-    console.log('strategyLocal', email);
+    console.log('--- strategyLocal', email);
     User.getByEmail({email, secured: true}).then(user => {
         if (!user) {
             return done(null, false, { message: 'Incorrect username.' });

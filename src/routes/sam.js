@@ -12,11 +12,11 @@ const manageError= function(req, res, next) {
 
 
 /**
- * Get By Id
+ * Search By Id
  */
 router.get('/',  (req, res, next) => {
     const queryString = req.query;
-    const version = queryString.version;
+
     res.json({message: "TODO Search"});
 });
 
@@ -28,9 +28,11 @@ router.get('/:id',  (req, res, next) => {
     const id= req.params.id;
     const queryString = req.query;
     const version = queryString.version;
+    console.log('------------- getById request');
     Sam.getById({id, version}).then(result=> {
-        res.json(result);
-    }).catch(manageError);
+       console.log('------------- getById result', result);
+        return  res.json(result);
+    }).catch(manageError(req, res, next) );
 });
 
 
@@ -43,7 +45,7 @@ router.delete('/:id',  (req, res, next) => {
     const version = queryString.version;
     Sam.deleteSam(id, version).then(result => {
         res.json({message: 'delete', result});
-    }).catch(manageError);
+    }).catch(manageError(req, res, next) );
 
 });
 
@@ -62,7 +64,7 @@ router.put('/:id',  (req, res, next) => {
             res.status(201);
         }
         return res.json(result);
-    }).catch(manageError);
+    }).catch(manageError(req, res, next) );
 });
 
 
@@ -77,7 +79,7 @@ router.post('/',  (req, res, next) => {
             res.status(201);
         }
         return res.json(result);
-    }).catch(manageError);
+    }).catch(manageError(req, res, next) );
 
 });
 

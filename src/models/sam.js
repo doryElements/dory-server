@@ -1,4 +1,4 @@
-const indexName = 'sams';
+const indexName = 'sam';
 const indexType = 'sam';
 
 const mapping = {
@@ -26,6 +26,7 @@ const client = require('./elasticClient');
 const defaultOpt = function (opt, secured) {
     opt.index = indexName;
     opt.type = indexType;
+    console.log('------------- getById defaultOpt', opt);
     return opt;
 };
 
@@ -47,7 +48,7 @@ const manageError = dao.manageError;
  * @returns {Promise.<TResult>}
  */
 const getById = function ({id, version, secured}) {
-    return client.get(defaultOpt({id, version}, secured))
+    return client.get(defaultOpt({id}, secured))
         .then(result => {
             console.log('Result', result);
             return result;

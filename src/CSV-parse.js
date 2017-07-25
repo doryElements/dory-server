@@ -53,13 +53,13 @@ function mergeEnvs(list){
         if(element['Serveur Web LAN']){
             element['Serveur Web LAN'].split(/[\n,\/]+/).forEach(function(e){
                 "use strict";
-               servers.push('LAN -'+e);
+               servers.push('LAN - '+e);
             });
         }
         if(element['Serveur Web DMZ']){
             element['Serveur Web DMZ'].split(/[\n,\/]+/).forEach(function(e){
                 "use strict";
-                servers.push('DMZ -'+e);
+                servers.push('DMZ - '+e);
             });
         }
 
