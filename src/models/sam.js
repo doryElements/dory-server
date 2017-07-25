@@ -24,7 +24,19 @@ const mapping = {
 
 const dao = require('./elasticDAO')({index: indexName, mapping});
 const client = require('./elasticClient');
+const ElasticModel = require('./elasticModel');
 
+
+class SamModel extends ElasticModel {
+
+    constructor() {
+        super({indexName, indexType, mapping});
+    }
+
+}
+
+const model = new SamModel();
+model.foo();
 
 const defaultOpt = function (opt, secured) {
     opt.index = indexName;
