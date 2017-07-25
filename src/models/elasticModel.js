@@ -62,7 +62,7 @@ class ElasticModel {
         const body = Object.assign({}, data);
         delete body.id;
         delete body.version;
-        return client.index(this.defaultOpt({body, id}, secured))
+        return client.create(this.defaultOpt({body, id}, secured))
             .then(this.adaptResponse);
     };
 
