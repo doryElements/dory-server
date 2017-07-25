@@ -50,7 +50,7 @@ const manageError = dao.manageError;
 const getById = function ({id, version, secured}) {
     return client.get(defaultOpt({id, version}, secured))
         .then(result => {
-            console.log('Result', result);
+            logger.debug('Result', result);
             return result
         })
         .then(adaptModel);
@@ -68,7 +68,7 @@ const getById = function ({id, version, secured}) {
  * @returns {Promise.<TResult>}
  */
 const createSam = function (sam) {
-    console.log('create Sam : ', sam);
+    logger.debug('create Sam : ', sam);
     const id = sam.id;
     delete sam.id;
     return client.index({
@@ -104,7 +104,7 @@ const updateSam = function (sam, id, version) {
         id: id,  version: version,
         body: sam
     }).then(result => {
-        console.log('update result : ', result);
+        logger.debug('update result : ', result);
         const parsedResult = {
             id: result._id,
             version: result._version
@@ -118,7 +118,7 @@ const deleteSam = function (id, version) {
         index: indexName, type: indexType,
         id: id, version: version
     }).then(result => {
-        console.log(result);
+        logger.debug(result);
         return result;
     });
 };

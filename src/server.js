@@ -139,8 +139,7 @@ app.post("/login", auth.authenticateLocal(), function (req, res) {
 // start the server ======
 // =======================
 app.listen(port, () => {
-    console.log('Magic  happens at http://localhost:' + port);
-    logger.info('listen on http://localhost:' + port);
+    logger.info('Magic  happens at http://localhost:' + port);
 });
 
 module.exports = app;
