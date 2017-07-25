@@ -5,9 +5,11 @@ const fetch = require('node-fetch');
 let output = [];
 let apps = [];
 
+
 fetch('http://localhost:9200/sam/sam/',{
     method : 'DELETE'
 }).catch(function(err){console.error(err)});
+
 
 const parser = parse({delimiter: ';'}, function(err, data){
     output.push(data);
@@ -43,36 +45,34 @@ function mergeEnvs(list){
     list.forEach(function(element){
         let newApp = {};
         let servers = [];
-        servers['LAN'] = [];
-        servers['DMZ']= [];
         let urls = [];
         let bdds = [];
         let vips = [];
         let softwares = [];
 
         if(element['Serveur Web LAN']){
-            element['Serveur Web LAN'].split('\n').forEach(function(e){
+            element['Serveur Web LAN'].split(/[\n,\/]+/).forEach(function(e){
                 "use strict";
                servers.push('LAN -'+e);
             });
         }
         if(element['Serveur Web DMZ']){
-            element['Serveur Web DMZ'].split('\n').forEach(function(e){
+            element['Serveur Web DMZ'].split(/[\n,\/]+/).forEach(function(e){
                 "use strict";
                 servers.push('DMZ -'+e);
             });
         }
 
         if(element['URL']){
-            urls = [...urls,...element['URL'].split('\n')];
+            urls = [...urls,...element['URL'].split(/[\n,]+/)];
         }
 
         if(element['VIP']){
-            vips = [...vips,...element['VIP'].split('\n')];
+            vips = [...vips,...element['VIP'].split(/[\n,\/]+/)];
         }
 
         if(element['Serveur DB']){
-            bdds = [...bdds,...element['Serveur DB'].split('\n')];
+            bdds = [...bdds,...element['Serveur DB'].split(/[\n,\/]+/)];
         }
 
         if(element['Version DB']){
