@@ -41,6 +41,7 @@ const accessLogStream = rfs('access.log', {
 // ensure log directory exists
 fs.existsSync(logDirectory) || fs.mkdirSync(logDirectory);
 
+// app.use(morgan('combined', { 'stream': logger.stream}));
 app.use(morgan('combined', {stream: accessLogStream}));
 app.use(morgan('dev'));
 app.use(cors());
