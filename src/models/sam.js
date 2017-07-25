@@ -30,8 +30,10 @@ const defaultOpt = function (opt, secured) {
 };
 
 const adaptModel = dao.adaptModel;
+const adaptResponse = dao.adaptResponse;
 const validateOne = dao.validateOne;
 const manageError = dao.manageError;
+
 
 /**
  * { _index: 'sams', _type: 'sam',
@@ -48,10 +50,9 @@ const getById = function ({id, version, secured}) {
     return client.get(defaultOpt({id, version}, secured))
         .then(result => {
             console.log('Result', result);
-            return result
-        })
-        .then(adaptModel);
-}
+            return result;
+        }).then(adaptResponse);
+};
 /**
  * create Sam result :
  * { _index: 'sams',
@@ -71,14 +72,7 @@ const createSam = function (sam) {
     return client.index({
         index: indexName, type: indexType,
         body: sam
-    }).then(result => {
-        const parsedResult = {
-            id: result._id,
-            version: result._version
-        };
-        return parsedResult;
-
-    });
+    }).then(adaptResponse);
 };
 
 /**
@@ -100,24 +94,14 @@ const updateSam = function (sam, id, version) {
         index: indexName, type: indexType,
         id: id,  version: version,
         body: sam
-    }).then(result => {
-        console.log('update result : ', result);
-        const parsedResult = {
-            id: result._id,
-            version: result._version
-        };
-        return parsedResult;
-    });
+    }).then(adaptResponse);
 };
 
 const deleteSam = function (id, version) {
     return client.delete({
         index: indexName, type: indexType,
         id: id, version: version
-    }).then(result => {
-        console.log(result);
-        return result;
-    });
+    }).then(adaptResponse);
 };
 
 exports.getById = getById;

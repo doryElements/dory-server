@@ -37,6 +37,22 @@ module.exports = function({index, mapping}) {
         return user;
     };
 
+    const adaptResponse = function (result) {
+        let response = {
+            id: result._id,
+            version: result._version
+        };
+        if (result._source) {
+            response = Object.assign(response, result._source);
+        }
+        if (result.created) {
+            response.created= result.created;
+        }
+        console.log('---> Response', result);
+        return response;
+    };
+
+
     const validateOne = function (response) {
         const result = response.hits;
         console.log(result);
@@ -61,7 +77,7 @@ module.exports = function({index, mapping}) {
         client,
         indexExists,
         createIndexMappingIndex,
-        adaptModel,validateOne,
+        adaptResponse, adaptModel,validateOne,
         manageError
-    }
+    };
 };
