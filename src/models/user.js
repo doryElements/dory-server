@@ -1,3 +1,6 @@
+// Logger
+const logger = require('../logger');
+
 const indexName = 'users';
 const indexType = 'user';
 

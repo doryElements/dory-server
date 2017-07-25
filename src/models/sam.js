@@ -1,3 +1,6 @@
+// Logger
+const logger = require('../logger');
+
 const indexName = 'sams';
 const indexType = 'sam';
 

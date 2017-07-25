@@ -8,7 +8,8 @@ const jwt = require('jsonwebtoken');
 const auth = require("./auth.js")();
 const uuidv4 = require('uuid/v4');
 
-// Login
+// Logger
+const logger = require('./logger');
 const fs = require('fs');
 const path = require('path');
 const morgan = require('morgan');
@@ -138,6 +139,7 @@ app.post("/login", auth.authenticateLocal(), function (req, res) {
 // =======================
 app.listen(port, () => {
     console.log('Magic  happens at http://localhost:' + port);
+    logger.info('listen on http://localhost:' + port);
 });
 
 module.exports = app;

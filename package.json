@@ -33,7 +33,9 @@
     "passport-jwt": "^2.2.1",
     "passport-local": "^1.0.0",
     "rotating-file-stream": "^1.2.2",
-    "uuid": "^3.1.0"
+    "uuid": "^3.1.0",
+    "winston": "^2.3.1",
+    "winston-daily-rotate-file": "^1.4.6"
   },
   "devDependencies": {
     "nodemon": "^1.11.0"

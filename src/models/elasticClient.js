@@ -1,8 +1,10 @@
+// Logger
+const logger = require('../logger');
+const config = require('../config');
 const elasticsearch = require('elasticsearch');
 
-const elasticClient = new elasticsearch.Client({
-    host: 'localhost:9200',
-    log: 'info'
-});
+const elasticConfig =config.elasticsearch;
+
+const elasticClient = new elasticsearch.Client(elasticConfig);
 
 module.exports = elasticClient;
