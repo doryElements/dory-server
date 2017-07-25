@@ -44,7 +44,6 @@ class UserModel extends ElasticModel {
         super({indexName, indexType, mapping});
     }
 
-
     validatePassword(cypherPassword, password)  {
         return cypherPassword === password;
     };
