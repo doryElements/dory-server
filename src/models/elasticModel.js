@@ -6,6 +6,7 @@ class ElasticModel {
 
     constructor({indexName, indexType, mapping}) {
         super.constructor();
+        this.client = client;
         this.index = indexName;
         this.indexType = indexType;
         this.mapping = mapping;
@@ -20,20 +21,24 @@ class ElasticModel {
     }
 
     initIndex() {
-        return client.indices.create({index: this.index});
+        return client.indices.create({index: this.index}).catch(error=> {
+            logger.error(error);
+        });
     }
 
-    initMapping() {
+    initMapping(opt) {
+        logger.debug('initMapping', this.mapping);
         return client.indices.putMapping(this.mapping);
     }
 
     createIndexMappingIndex() {
-        return this.indexExists().then(function (exists) {
+        return this.indexExists().then( (exists)=> {
+            logger.debug('indexExists', exists);
             if (exists) {
                 return this.deleteIndex();
             }
             return exists;
-        }).then(this.initIndex).then(this.initMapping);
+        }).then(this.initIndex.bind(this)).then(this.initMapping.bind(this));
     }
 
     defaultOpt(opt, secured) {
@@ -46,6 +51,7 @@ class ElasticModel {
     }
 
     adaptResponse(result) {
+        logger.debug("----- adaptResponse", result);
         const source = result._source;
         let response = {id: result._id,  version: result._version};
         if (source) {

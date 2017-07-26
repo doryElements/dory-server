@@ -4,6 +4,7 @@ const logger = require('../logger');
 const express = require('express');
 const router = express.Router();
 const User = require('../models/user');
+const userData = require('../userData').users;
 
 router.get('/',  (req, res, next) => {
     // console.log('req keys', Object.keys(req));
@@ -12,8 +13,12 @@ router.get('/',  (req, res, next) => {
 });
 
 router.get('/init', (req, res) => {
-    User.initIndexUser()
-        .then(result =>   User.users.map(user =>  User.addUser(user) ) )
+    User.createIndexMappingIndex()
+        .then(result => {
+            logger.debug('createIndexMappingIndex', result);
+            return result;
+        } )
+        .then(result =>   userData.map(user =>  User.create(user) ) )
         .then(promises => Promise.all(promises))
         .then(results => res.json(results))
         .catch(err => res.status(500).json(err));

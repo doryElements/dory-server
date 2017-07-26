@@ -1,4 +1,5 @@
-// auth.js
+const logger = require('./logger');
+
 const passport = require("passport");
 const passportJWT = require("passport-jwt");
 
@@ -36,12 +37,12 @@ const cleanUserSecured =function (user) {
 };
 
 const strategyValidateUsernamePassword= (req, email, password, done) => {
-    console.log('--- strategyLocal', email);
+    logger.info('--- strategyLocal', email);
     User.getByEmail({email, secured: true}).then(user => {
         if (!user) {
             return done(null, false, { message: 'Incorrect username.' });
         }
-        if (!User.validePassword(user.secured.password, password)) {
+        if (!User.validatePassword(user.secured.password, password)) {
             return done(null, false, { message: 'Incorrect password.' });
         }
         const payload = {
@@ -57,7 +58,7 @@ const strategyValidateUsernamePassword= (req, email, password, done) => {
         return done(null, secureUser,payload);
     }).catch(err=> {
         return done(err);
-    })
+    });
 };
 
 
