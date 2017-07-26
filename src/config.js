@@ -10,6 +10,12 @@ module.exports = {
         keepAlive: true
     },
     logging: {
-        elasticsearch: true
+        elasticsearch: true,
+        file: {
+            level: 'info'
+        },
+        console: {
+            level: 'debug'
+        }
     }
 };
