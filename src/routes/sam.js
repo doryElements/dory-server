@@ -29,8 +29,7 @@ router.post('/_search',  (req, res, next) => {
  */
 router.get('/:id',  (req, res, next) => {
     const id= req.params.id;
-    const queryString = req.query;
-    const version = queryString.version;
+    const version = req.query.version;
     Sam.getById({id, version}).then(result=> {
         return  res.json(result);
     }).catch(manageError(req, res, next) );
@@ -42,8 +41,7 @@ router.get('/:id',  (req, res, next) => {
  */
 router.delete('/:id',  (req, res, next) => {
     const id= req.params.id;
-    const queryString = req.query;
-    const version = queryString.version;
+    const version = req.query.version;
     Sam.delete(id, version).then(result => {
         res.json({message: 'delete', result});
     }).catch(manageError(req, res, next) );
@@ -56,8 +54,7 @@ router.delete('/:id',  (req, res, next) => {
  */
 router.put('/:id',  (req, res, next) => {
     const id= req.params.id;
-    const queryString = req.query;
-    const version = queryString.version;
+    const version = req.query.version;
     const body = req.body;
     // Sam.validate(body).then()
     Sam.update(body, id, version).then(result => {
