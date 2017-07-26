@@ -17,9 +17,13 @@ const manageError= function(req, res, next) {
 /**
  * Search By Params
  */
-router.get('/',  (req, res, next) => {
-    const queryString = req.query;
-    res.json({message: "TODO Search"});
+router.post('/_search',  (req, res, next) => {
+    // const queryString = req.query;
+    console.log('------------- search request',req.body);
+    Sam.getByParams(req.body.app , req.body.fields).then(result =>{
+        console.log('------------- searchByName result', result);
+        return res.json(result);
+    }).catch(manageError(req,res,next));
 });
 
 

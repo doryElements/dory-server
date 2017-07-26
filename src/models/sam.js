@@ -23,6 +23,7 @@ const mapping = {
 };
 
 const ElasticModel = require('./elasticModel');
+const client = require('./elasticClient');
 
 
 class SamModel extends ElasticModel {
@@ -31,9 +32,25 @@ class SamModel extends ElasticModel {
         super({indexName, indexType, mapping});
     }
 
+    getByParams(searchText,searchFields){
+        console.log('Search for  : ',searchText, searchFields);
+        // const request =this.defaultOpt({q: 'app:'+searchText});
+        const request =this.defaultOpt({
+            body:{
+                'query': {
+                    'simple_query_string':{
+                        'fields': searchFields ,
+                        'query': `${searchText}*`
+                    }
+                }
+            }
+        });
+
+        return client.search(request);
+    }
+
 }
 
 const model = new SamModel();
-
 
 module.exports=model;
