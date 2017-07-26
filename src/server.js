@@ -85,12 +85,12 @@ app.get('/', (req, res) => {
     });
 });
 
-app.use('/users', routeUser);
-app.use('/profile',  auth.authenticate(), routeProfile);
-app.use('/sams',  auth.authenticate(), routeSam);
+app.use('/api/users', routeUser);
+app.use('/api/profile',  auth.authenticate(), routeProfile);
+app.use('/api/sams',  auth.authenticate(), routeSam);
 
 
-app.post("/login", auth.authenticateLocal(), function (req, res) {
+app.post("/api/login", auth.authenticateLocal(), function (req, res) {
     const payload = req.authInfo;
         const token = jwt.sign(payload, cfg.jwtSecret);
         res.json({
