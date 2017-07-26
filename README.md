@@ -29,3 +29,6 @@ curl -H "Content-Type: application/json" -X POST -d '{"email":"john@mail.com","p
 # Elasticsearch
 
 * Resilience : https://www.elastic.co/guide/en/elasticsearch/resiliency/current/index.html
+
+# Http/2
+* https://github.com/expressjs/express/issues/2364
