@@ -59,6 +59,7 @@ router.put('/:id',  (req, res, next) => {
     const queryString = req.query;
     const version = queryString.version;
     const body = req.body;
+    // Sam.validate(body).then()
     Sam.update(body, id, version).then(result => {
         if (result.created) {
             delete result.created;

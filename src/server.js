@@ -3,7 +3,6 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 
-// const jwt = require("jwt-simple");
 const jwt = require('jsonwebtoken');
 const auth = require("./auth.js")();
 const uuidv4 = require('uuid/v4');
