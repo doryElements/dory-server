@@ -42,13 +42,12 @@ function LogClass(config) {
 }
 
 function getClientSettings(options) {
-    let config = options;
-    if (options.logging) {
-        config = Object.assign({}, config, {log: LogClass});
-        delete config.logging;
+    let esCfg = options;
+    if (config.logging.elasticsearch) {
+        esCfg = Object.assign({}, esCfg, {log: LogClass});
     }
-    logger.debug('Elastic client config', config);
-    return config;
+    logger.debug('Elastic client config', esCfg);
+    return esCfg;
 }
 
 

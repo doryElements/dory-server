@@ -59,7 +59,7 @@ module.exports = function({index, mapping}) {
         if (result.total === 1) {
             return adaptModel(result.hits[0]);
         } else {
-            return Promise.reject(new Error("Too much result"))
+            return Promise.reject(new Error("Too much result"));
         }
         return result;
     };

@@ -15,11 +15,10 @@ const manageError= function(req, res, next) {
 
 
 /**
- * Search By Id
+ * Search By Params
  */
 router.get('/',  (req, res, next) => {
     const queryString = req.query;
-
     res.json({message: "TODO Search"});
 });
 
@@ -31,9 +30,7 @@ router.get('/:id',  (req, res, next) => {
     const id= req.params.id;
     const queryString = req.query;
     const version = queryString.version;
-    console.log('------------- getById request');
     Sam.getById({id, version}).then(result=> {
-       console.log('------------- getById result', result);
         return  res.json(result);
     }).catch(manageError(req, res, next) );
 });
@@ -46,7 +43,7 @@ router.delete('/:id',  (req, res, next) => {
     const id= req.params.id;
     const queryString = req.query;
     const version = queryString.version;
-    Sam.deleteSam(id, version).then(result => {
+    Sam.delete(id, version).then(result => {
         res.json({message: 'delete', result});
     }).catch(manageError(req, res, next) );
 
@@ -61,7 +58,7 @@ router.put('/:id',  (req, res, next) => {
     const queryString = req.query;
     const version = queryString.version;
     const body = req.body;
-    Sam.updateSam(body, id, version).then(result => {
+    Sam.update(body, id, version).then(result => {
         if (result.created) {
             delete result.created;
             res.status(201);
@@ -76,7 +73,9 @@ router.put('/:id',  (req, res, next) => {
  */
 router.post('/',  (req, res, next) => {
     const body = req.body;
-    Sam.createSam(body).then(result => {
+    logger.debug('-------- router.post', Sam);
+
+    Sam.create(body).then(result => {
         if (result.created) {
             delete result.created;
             res.status(201);

@@ -7,7 +7,9 @@ module.exports = {
     elasticsearch: {
         host: 'localhost:9200',
         log: 'info',
-        keepAlive: true,
-        logging: true
+        keepAlive: true
+    },
+    logging: {
+        elasticsearch: true
     }
 };
