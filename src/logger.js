@@ -24,7 +24,7 @@ winston.addColors({
 const logger = new winston.Logger({
     transports: [
         new (winston.transports.Console)({
-            level: 'trace',
+            level: config.logging.console.level,
             handleExceptions: true,
             prettyPrint: true,
             silent: false,
@@ -33,7 +33,7 @@ const logger = new winston.Logger({
             json: false
         }),
         new (winston.transports.DailyRotateFile)({
-            level: 'info',
+            level: config.logging.file.level,
             filename: 'dory.log',
             dirname: logDirectory,
             json: false,

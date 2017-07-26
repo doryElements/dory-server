@@ -33,8 +33,6 @@ class SamModel extends ElasticModel {
     }
 
     getByParams(searchText,searchFields){
-        console.log('Search for  : ',searchText, searchFields);
-        // const request =this.defaultOpt({q: 'app:'+searchText});
         const request =this.defaultOpt({
             body:{
                 'query': {
