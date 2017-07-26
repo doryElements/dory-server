@@ -34,6 +34,6 @@ class SamModel extends ElasticModel {
 }
 
 const model = new SamModel();
-// model.foo();
+
 
 module.exports=model;
