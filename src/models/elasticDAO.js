@@ -48,7 +48,6 @@ module.exports = function({index, mapping}) {
         if (result.created) {
             response.created= result.created;
         }
-        console.log('---> Response', result);
         return response;
     };
 

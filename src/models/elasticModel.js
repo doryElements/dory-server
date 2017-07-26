@@ -21,19 +21,19 @@ class ElasticModel {
     }
 
     initIndex() {
-        return client.indices.create({index: this.index}).catch(error=> {
+        return client.indices.create({index: this.index}).catch(error => {
             logger.error(error);
         });
     }
 
     initMapping(opt) {
-        logger.debug('initMapping', this.mapping);
+        // logger.debug('initMapping', this.mapping);
         return client.indices.putMapping(this.mapping);
     }
 
     createIndexMappingIndex() {
-        return this.indexExists().then( (exists)=> {
-            logger.debug('indexExists', exists);
+        return this.indexExists().then((exists) => {
+            // logger.debug('indexExists', exists);
             if (exists) {
                 return this.deleteIndex();
             }
@@ -42,30 +42,30 @@ class ElasticModel {
     }
 
     defaultOpt(opt, secured) {
-        const option =  Object.assign({
+        const option = Object.assign({
             index: this.index,
             type: this.indexType
         }, opt);
-        logger.debug('-------- defaultOpt', option);
+        // logger.debug('-------- defaultOpt', option);
         return option;
     }
 
     adaptResponse(result) {
-        logger.debug("----- adaptResponse", result);
+        // logger.debug("----- adaptResponse", result);
         const source = result._source;
-        let response = {id: result._id,  version: result._version};
+        let response = {id: result._id, version: result._version};
         if (source) {
             response = Object.assign(response, source);
         }
         if (result.created) {
-            response.created= result.created;
+            response.created = result.created;
         }
         return response;
     }
 
-    validateOne (response) {
+    validateOne(response) {
         const result = response.hits;
-        logger.debug("validateOne", result);
+        // logger.debug("validateOne", result);
         if (result.total === 1) {
             return this.adaptResponse(result.hits[0]);
         } else {
@@ -83,9 +83,13 @@ class ElasticModel {
     create(data) {
         const id = data.id;
         const body = Object.assign({}, data);
-        delete body.id;
+        let request = {body};
+        if (id) {
+            delete body.id;
+            request = Object.assign(request, {id});
+        }
         delete body.version;
-        return client.index(this.defaultOpt({body}))
+        return client.index(this.defaultOpt(request))
             .then(this.adaptResponse);
     }
 
@@ -99,9 +103,6 @@ class ElasticModel {
             .then(this.adaptResponse);
     }
 
-    foo() {
-        logger.info('Log Foo');
-    }
 
 }
 
