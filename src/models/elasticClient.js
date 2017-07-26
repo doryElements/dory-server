@@ -13,7 +13,7 @@ function LogClass(config) {
     this.warning = log.warn.bind(log);
     this.info = log.info.bind(log);
     this.debug = log.debug.bind(log);
-    this.trace = (method, requestUrl, body, responseBody, responseStatus) => {
+    // this.trace = (method, requestUrl, body, responseBody, responseStatus) => {
         // log.trace({
         //     method: method,
         //     requestUrl: requestUrl,
@@ -21,27 +21,22 @@ function LogClass(config) {
         //     responseBody: responseBody,
         //     responseStatus: responseStatus
         // });
-        log.trace({
-            method: method,
-            body: body,
-            responseStatus: responseStatus
-        });
-    };
-    // this.trace = (method, req, body, res, status)=> {
-    //     const parts = req.path.split('/');
-    //     const meta = {
-    //         host: req.protocol + '//' + req.hostname + ':' + req.port,
-    //         index: parts[1] || '',
-    //         type: parts[2] || '',
-    //         response: status,
-    //         queryString: parts[parts.length - 1],
-    //         queryBody: body || ''
-    //     };
-    //     if (status !== 200) {
-    //         meta.responseBody = res;
-    //         log.trace('[ELASTICSEARCH] ' + method + ' @ ', meta);
-    //     }
     // };
+    this.trace = (method, req, body, res, status)=> {
+        const parts = req.path.split('/');
+        const meta = {
+            host: req.protocol + '//' + req.hostname + ':' + req.port,
+            index: parts[1] || '',
+            type: parts[2] || '',
+            response: status,
+            queryString: parts[parts.length - 1],
+            queryBody: body || ''
+        };
+        if (status !== 200) {
+            meta.responseBody = res;
+            log.trace('[ELASTICSEARCH] ' + method + ' @ ', meta);
+        }
+    };
     this.close =  () => {};
 }
 
