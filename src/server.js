@@ -99,42 +99,6 @@ app.post("/api/login", auth.authenticateLocal(), function (req, res) {
         });
 });
 
-// app.post("/token", function (req, res) {
-//     if (req.body.email && req.body.password) {
-//         const email = req.body.email;
-//         const password = req.body.password;
-//         const user = User.getByEmail({email, secured: true}).then(user => {
-//             if (!user) {
-//                 return res.status(401).json({message: "no such user found"});
-//             }
-//             return user;
-//         }).then(user => {
-//             if (user.secured.password === password) {
-//                 const payload = {
-//                     jit: uuidv4(),
-//                     iss: "dory-server",
-//                     sub: user.id,
-//                     aud: "dory",
-//                     name: user.name,
-//                     email: user.email
-//                 };
-//                 const token = jwt.sign(payload, cfg.jwtSecret);
-//                 return res.json({
-//                     message: "ok",
-//                     token: token
-//                 });
-//             } else {
-//                 return res.sendStatus(401).json({message: "Password did not match"});
-//             }
-//         }).catch(err => {
-//             return res.sendStatus(401);
-//         });
-//
-//
-//     } else {
-//         res.sendStatus(401);
-//     }
-// });
 
 // =======================
 // start the server ======
