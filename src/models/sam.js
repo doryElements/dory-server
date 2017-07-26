@@ -1,3 +1,6 @@
+// Logger
+const logger = require('../logger');
+
 const indexName = 'sam';
 const indexType = 'sam';
 
@@ -21,7 +24,19 @@ const mapping = {
 
 const dao = require('./elasticDAO')({index: indexName, mapping});
 const client = require('./elasticClient');
+const ElasticModel = require('./elasticModel');
 
+
+class SamModel extends ElasticModel {
+
+    constructor() {
+        super({indexName, indexType, mapping});
+    }
+
+}
+
+const model = new SamModel();
+// model.foo();
 
 const defaultOpt = function (opt, secured) {
     opt.index = indexName;
@@ -50,10 +65,11 @@ const manageError = dao.manageError;
 const getById = function ({id, version, secured}) {
     return client.get(defaultOpt({id}, secured))
         .then(result => {
-            console.log('Result', result);
+            logger.debug('Result', result);
             return result;
         }).then(adaptResponse);
 };
+
 /**
  * create Sam result :
  * { _index: 'sams',
@@ -67,7 +83,7 @@ const getById = function ({id, version, secured}) {
  * @returns {Promise.<TResult>}
  */
 const createSam = function (sam) {
-    console.log('create Sam : ', sam);
+    logger.debug('create Sam : ', sam);
     const id = sam.id;
     delete sam.id;
     return client.index({

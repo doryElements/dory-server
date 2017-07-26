@@ -8,7 +8,8 @@ const jwt = require('jsonwebtoken');
 const auth = require("./auth.js")();
 const uuidv4 = require('uuid/v4');
 
-// Login
+// Logger
+const logger = require('./logger');
 const fs = require('fs');
 const path = require('path');
 const morgan = require('morgan');
@@ -41,6 +42,7 @@ const accessLogStream = rfs('access.log', {
 // ensure log directory exists
 fs.existsSync(logDirectory) || fs.mkdirSync(logDirectory);
 
+// app.use(morgan('combined', { 'stream': logger.stream}));
 app.use(morgan('combined', {stream: accessLogStream}));
 app.use(morgan('dev'));
 app.use(cors());
@@ -138,7 +140,7 @@ app.post("/login", auth.authenticateLocal(), function (req, res) {
 // start the server ======
 // =======================
 app.listen(port, () => {
-    console.log('Magic  happens at http://localhost:' + port);
+    logger.info('Magic  happens at http://localhost:' + port);
 });
 
 module.exports = app;
