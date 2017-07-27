@@ -6,7 +6,7 @@ const fs = require('fs');
 const path = require('path');
 
 // ensure log directory exists
-const logDirectory = path.join(__dirname, '..', 'log');
+const logDirectory = path.join(__dirname, '..', '..', 'log');
 fs.existsSync(logDirectory) || fs.mkdirSync(logDirectory);
 
 
@@ -61,3 +61,4 @@ module.exports.stream = {
         logger.info(message);
     }
 };
+module.exports.logDirectory = logDirectory;

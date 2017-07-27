@@ -32,14 +32,12 @@ const User = require("./models/user");
 // === Express Config
 // =======================
 // Log config
-const logDirectory = path.join(__dirname, '..', 'log');
+const logDirectory = logger.logDirectory;
 // create a rotating write stream
 const accessLogStream = rfs('access.log', {
     interval: '1d', // rotate daily
     path: logDirectory
 });
-// ensure log directory exists
-fs.existsSync(logDirectory) || fs.mkdirSync(logDirectory);
 
 // app.use(morgan('combined', { 'stream': logger.stream}));
 app.use(morgan('combined', {stream: accessLogStream}));
