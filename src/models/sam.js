@@ -40,9 +40,11 @@ class SamModel extends ElasticModel {
         super({indexName, indexType, mapping, schema});
     }
 
-    getByParams(searchText, searchFields) {
+    getByParams(searchText='', searchFields=['app','tags'], size=10, from=0){
         const request = this.defaultOpt({
             body: {
+                'size': size,
+                'from': from,
                 'query': {
                     'simple_query_string': {
                         'fields': searchFields,

@@ -17,8 +17,9 @@ const manageError= function(req, res, next) {
 /**
  * Search By Params
  */
-router.post('/_search',  (req, res, next) => {
-    Sam.getByParams(req.body.app , req.body.fields).then(result =>{
+router.get('/',  (req, res, next) => {
+    const queryString = req.query;
+    Sam.getByParams(queryString.app , queryString.fields,  queryString.size, queryString.from).then(result =>{
         return res.json(result);
     }).catch(manageError(req,res,next));
 });
