@@ -1,7 +1,7 @@
 // Logger
 const logger = require('../logger');
 const ElasticModel = require('./elasticModel');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 
 
 

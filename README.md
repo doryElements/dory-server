@@ -10,6 +10,10 @@ npm run dev
 curl -H "Content-Type: application/json" -X POST -d '{"email":"john@mail.com","password": "john123"}'  http://localhost:8181/token
 ```
 
+# TODO
+1. Mise en place de la sécurtité d'accès par Rôle (role positionné dans le token)
+1. Mis en place des controles server pour valider le JSON sur les opération de CRUD
+1. MChiffrage des password avec bcrypt
 
 ## Documentation
 

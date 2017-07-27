@@ -24,7 +24,7 @@
     "ajv": "^5.2.2",
     "ajv-async": "^0.1.0",
     "ajv-i18n": "^2.1.0",
-    "bcrypt": "^1.0.2",
+    "bcryptjs": "^2.4.3",
     "body-parser": "^1.17.2",
     "cors": "^2.8.4",
     "csv-parse": "^1.2.1",
