@@ -16,6 +16,7 @@ curl -H "Content-Type: application/json" -X POST -d '{"email":"john@mail.com","p
 1. Intégration du projet dory-app dans dory-server (ficier html de l'IHM dans le projet bower, ajout d'un répertoire static servi par express)
 1. Mis en place des controles server pour valider le JSON sur les opération de CRUD
 1. Mise en place de la sécurtité d'accès par Rôle (role positionné dans le token)
+1. Test Unitaire sur les implementations serveurs (validation, logique métier, ...)
 1. Chiffrage des password avec bcryptjs
 1. Mise en place de HTTP/2
 1. Implémentation Cache Http: Implementation des etag /IF-Non-Match / et code retour 304 Not Modified sans body

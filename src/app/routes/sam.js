@@ -6,10 +6,12 @@ const router = express.Router();
 
 const Sam = require('../models/sam');
 
+
+
 const manageError= function(req, res, next) {
     return function (err) {
         const status = err.status || 500;
-        return res.status(status).json({status, message: err.message});
+        return res.status(status).json({status, message: err.message, errors: err.errors});
     };
 };
 
@@ -57,8 +59,9 @@ router.put('/:id',  (req, res, next) => {
     const id= req.params.id;
     const version = req.query.version;
     const body = req.body;
-    // Sam.validate(body).then()
-    Sam.update(body, id, version).then(result => {
+    Sam.validate(body).then(data => {
+        return Sam.update(data, id, version);
+    }).then(result => {
         if (result.created) {
             delete result.created;
             res.status(201);
@@ -74,8 +77,9 @@ router.put('/:id',  (req, res, next) => {
 router.post('/',  (req, res, next) => {
     const body = req.body;
     logger.debug('-------- router.post', Sam);
-
-    Sam.create(body).then(result => {
+    Sam.validate(body).then(data => {
+        return Sam.create(data);
+    }).then(result => {
         if (result.created) {
             delete result.created;
             res.status(201);

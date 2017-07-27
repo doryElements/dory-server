@@ -76,11 +76,16 @@ app.disable('x-powered-by');
 // routes
 // =======================
 // basic route
-app.get('/', (req, res) => {
-    res.json({
-        status: "It's Alive! My API is alive!"
-    });
-});
+// app.get('/', (req, res) => {
+//     res.json({
+//         status: "It's Alive! My API is alive!"
+//     });
+// });
+
+const staticDirectory = path.join(__dirname, '..',   'web');
+logger.info('static Directory : ' , staticDirectory);
+app.use('/', express.static(staticDirectory));
+
 
 app.use('/api/users', routeUser);
 app.use('/api/profile',  auth.authenticate(), routeProfile);

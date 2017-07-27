@@ -6,6 +6,46 @@ var localize = require('ajv-i18n');
 const Ajv = require('ajv');
 const ajv = new Ajv({allErrors: true, jsonPointers:false}); // options can be passed, e.g. {allErrors: true}
 
+const ValidationError = require('../errors/validationError');
+
+
+/**
+ * {
+ *   "errors" :
+ *   {
+ *       "arg1" : ["error msg 1", "error msg 2", ...]
+ *       "arg2" : ["error msg 1", "error msg 2", ...]
+ *   }
+ * }
+ */
+function manageAjvValidationError(err) {
+    if (!(err instanceof Ajv.ValidationError)) throw err;
+    // data is invalid
+    // 422
+    logger.info('Validation errors:', err.errors);
+
+    localize.fr(err.errors); // TODO // Use the language request
+    const errors = err.errors;
+    const errorMapping = errors.reduce((acc, error) => {
+        // Error Key
+        const key = error.dataPath.slice(1);
+        let values = acc[key];
+        if (!values) {
+            values = [];
+            acc[key] = values;
+        }
+        // Error Value
+        const clone = Object.assign({}, error);
+        delete clone.dataPath;
+        delete clone.schemaPath;
+        values.push(clone);
+        return acc;
+    }, {});
+    // logger.info('Validation errors:', errorMapping);
+    throw new ValidationError(err.message, errorMapping);
+}
+
+
 class ElasticModel {
 
     constructor({indexName, indexType, mapping, schema}) {
@@ -25,7 +65,7 @@ class ElasticModel {
     validate(data) {
         logger.debug('request validate', data);
         if (this.validator) {
-            return this.validator(data);
+            return this.validator(data).catch(manageAjvValidationError);
         } else {
             return new Promise(resolve=>{
                 resolve(data);
