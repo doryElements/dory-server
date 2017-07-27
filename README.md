@@ -18,6 +18,7 @@ curl -H "Content-Type: application/json" -X POST -d '{"email":"john@mail.com","p
 1. Mise en place de la sécurtité d'accès par Rôle (role positionné dans le token)
 1. Chiffrage des password avec bcryptjs
 1. Mise en place de HTTP/2
+1. Implémentation Cache Http: Implementation des etag /IF-Non-Match / et code retour 304 Not Modified sans body
 
 ## DONE Server
 Déplacer les taches faites dans ce menu
