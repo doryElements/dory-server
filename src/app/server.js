@@ -105,8 +105,18 @@ app.post("/api/login", auth.authenticateLocal(), function (req, res) {
 // =======================
 // start the server ======
 // =======================
-app.listen(port, () => {
-    logger.info('Magic  happens at http://localhost:' + port);
+const certsDirectory = path.join(__dirname, '..',   'certs');
+const certs = {
+    key: fs.readFileSync(path.join(certsDirectory, 'server.key')),
+    cert: fs.readFileSync(path.join(certsDirectory, 'server.crt'))
+};
+
+require('spdy').createServer(certs, app).listen(port, () => {
+    logger.info('Magic  happens at https://localhost:' + port);
 });
+
+// app.listen(port, () => {
+//     logger.info('Magic  happens at http://localhost:' + port);
+// });
 
 module.exports = app;
