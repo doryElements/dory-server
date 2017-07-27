@@ -11,8 +11,7 @@ curl -H "Content-Type: application/json" -X POST -d '{"email":"john@mail.com","p
 ```
 
 # TODO
-## TODO Server
-1. Supprimer 
+## TODO Server 
 1. Renvoyer le token JWT dans un cookie (en service middleware, impact sur auth.js qui récupère le token)
 1. Intégration du projet dory-app dans dory-server (ficier html de l'IHM dans le projet bower, ajout d'un répertoire static servi par express)
 1. Mis en place des controles server pour valider le JSON sur les opération de CRUD
@@ -31,7 +30,7 @@ Déplacer les taches faites dans ce menu
 1. IntégrerMise en place d'un custom style https://www.polymer-project.org/2.0/docs/devguide/style-shadow-dom#custom-style
 1. Travailler sur les le coté jolie de l'IHM d'édition
 1. Ajouter la navigation clavier sur l'écran de recherche dory
-1. Ajouter la gestion d'url sur la navigation: début de composant https://github.com/FiveElements/earth-crud-pages (https://github.com/PolymerElements/app-route/issues/205)
+1. Ajouter la gestion d'url sur la navigation: début de composant https://github.com/FiveElements/earth-crud-pages (https://github.com/PolymerElements/app-route/issues/205
 
 ## DONE IHM
 Déplacer les taches faites dans ce menu
