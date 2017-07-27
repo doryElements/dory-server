@@ -24,6 +24,12 @@ router.get('/init', (req, res) => {
         .catch(err => res.status(500).json(err));
 });
 
-
+router.put('/:id/password', (req, res) => {
+    const password = 'coucou';
+    User.hashPasswordPromise(password).then(hash=> {
+        res.json({message: 'TODO change password', password, hash});
+        return hash;
+    });
+});
 
 module.exports = router;

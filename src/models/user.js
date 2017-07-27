@@ -2,8 +2,11 @@
 const logger = require('../logger');
 const ElasticModel = require('./elasticModel');
 const bcrypt = require('bcrypt');
-const saltRounds = 10;
 
+
+
+// Config
+const saltRounds = 13;
 const indexName = 'users';
 const indexType = 'user';
 
@@ -34,12 +37,20 @@ const mapping = {
     }
 };
 
+const schema = {
+    "$id": "userSchema.json#",
+    "$async": true,
+    "properties": {
+        "name": {"type": "string", "minLength": 2},
+        "email": {"type": "string", "format": "email"}
+    }
+};
 
 
 class UserModel extends ElasticModel {
 
     constructor() {
-        super({indexName, indexType, mapping});
+        super({indexName, indexType, mapping, schema});
     }
 
     getByEmail({email, secured}) {

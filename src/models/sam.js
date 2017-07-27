@@ -1,5 +1,8 @@
 // Logger
 const logger = require('../logger');
+const ElasticModel = require('./elasticModel');
+const client = require('./elasticClient');
+const Ajv = require('ajv');
 
 const indexName = 'sam';
 const indexType = 'sam';
@@ -22,24 +25,29 @@ const mapping = {
     }
 };
 
-const ElasticModel = require('./elasticModel');
-const client = require('./elasticClient');
+const schema = {
+    "$id": "samSchema.json#",
+    "$async": true,
+    "properties": {
+        "name": {"type": "string", "minLength": 2}
+    }
+};
 
 
 class SamModel extends ElasticModel {
 
     constructor() {
-        super({indexName, indexType, mapping});
+        super({indexName, indexType, mapping, schema});
     }
 
-    getByParams(searchText='',searchFields=['app','tags'], size=10, from=0){
-        const request =this.defaultOpt({
-            body:{
-                'size' : size,
-                'from' : from,
+    getByParams(searchText='', searchFields=['app','tags'], size=10, from=0){
+        const request = this.defaultOpt({
+            body: {
+                'size': size,
+                'from': from,
                 'query': {
-                    'simple_query_string':{
-                        'fields': searchFields ,
+                    'simple_query_string': {
+                        'fields': searchFields,
                         'query': `${searchText}*`
                     }
                 }
@@ -53,4 +61,13 @@ class SamModel extends ElasticModel {
 
 const model = new SamModel();
 
-module.exports=model;
+model.validate({name: '1', postId: 19})
+    .then(function (data) {
+        logger.info('Data is valid', data); // { userId: 1, postId: 19 }
+    }).catch(function (err) {
+    if (!(err instanceof Ajv.ValidationError)) throw err;
+    // data is invalid
+    logger.info('Validation errors:', err.errors);
+});
+
+module.exports = model;

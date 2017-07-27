@@ -1,15 +1,36 @@
 const logger = require('../logger');
 const client = require('./elasticClient');
-
+//Validator
+// const setupAsync = require('ajv-async');
+var localize = require('ajv-i18n');
+const Ajv = require('ajv');
+const ajv = new Ajv({allErrors: true, jsonPointers:false}); // options can be passed, e.g. {allErrors: true}
 
 class ElasticModel {
 
-    constructor({indexName, indexType, mapping}) {
+    constructor({indexName, indexType, mapping, schema}) {
         super.constructor();
         this.client = client;
         this.index = indexName;
         this.indexType = indexType;
         this.mapping = mapping;
+        if (schema) {
+            if (!schema.$async) {
+                schema.$async =true;
+            }
+            this.validator = ajv.compile(schema);
+        }
+    }
+
+    validate(data) {
+        logger.debug('request validate', data);
+        if (this.validator) {
+            return this.validator(data);
+        } else {
+            return new Promise(resolve=>{
+                resolve(data);
+            })
+        }
     }
 
     indexExists() {
@@ -82,13 +103,17 @@ class ElasticModel {
 
     create(data) {
         const id = data.id;
+        const version = data.version;
         const body = Object.assign({}, data);
         let request = {body};
         if (id) {
             delete body.id;
             request = Object.assign(request, {id});
         }
-        delete body.version;
+        if (version) {
+            delete body.version;
+            request = Object.assign(request, {version});
+        }
         return client.index(this.defaultOpt(request))
             .then(this.adaptResponse);
     }
