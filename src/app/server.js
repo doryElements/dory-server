@@ -19,30 +19,29 @@ const serve = require('koa-static');
 // Routes
 const apiRoutes = require('./routes/index');
 
+// Koa Config
 app.use(koaBody());
 
 
 // look ma, error propagation!
-app.use(async function(ctx, next) {
-    try {
-        await next();
-    } catch (err) {
+app.use((ctx, next) => {
+    return next().catch((err) => {
         logger.error('---------------------------------------');
-        logger.error('Global error Handling',err);
+        logger.error('Global error Handling', err);
         logger.error('---------------------------------------');
         ctx.status = err.status || 500;
-        ctx.body = { message: err.message, status: ctx.status, errors: err.errors};
+        ctx.body = {message: err.message, status: ctx.status, errors: err.errors};
         // since we handled this manually we'll want to delegate to the regular app
         // level error handling as well so that centralized still functions correctly.
         ctx.app.emit('error', err, ctx);
-    }
+    });
 });
 
 
 // serve staticfiles from ./public
-const staticDirectory = path.join(__dirname, '..',   'web');
-logger.info('Serve static file ',staticDirectory);
-app.use(serve( staticDirectory ));
+const staticDirectory = path.join(__dirname, '..', 'web');
+logger.info('Serve static file ', staticDirectory);
+app.use(serve(staticDirectory));
 
 // Api Routes
 app.use(apiRoutes.routes())
@@ -55,7 +54,7 @@ app.use(apiRoutes.routes())
 // =======================
 // start the server ======
 // =======================
-const certsDirectory = path.join(__dirname, '..',   'certs');
+const certsDirectory = path.join(__dirname, '..', 'certs');
 const certs = {
     key: fs.readFileSync(path.join(certsDirectory, 'server.key')),
     cert: fs.readFileSync(path.join(certsDirectory, 'server.crt'))

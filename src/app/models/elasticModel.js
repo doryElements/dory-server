@@ -2,9 +2,9 @@ const logger = require('../logger');
 const client = require('./elasticClient');
 //Validator
 // const setupAsync = require('ajv-async');
-var localize = require('ajv-i18n');
+const localize = require('ajv-i18n');
 const Ajv = require('ajv');
-const ajv = new Ajv({allErrors: true, jsonPointers:false}); // options can be passed, e.g. {allErrors: true}
+const ajv = new Ajv({allErrors: true, jsonPointers: false}); // options can be passed, e.g. {allErrors: true}
 
 const ValidationError = require('../errors/validationError');
 
@@ -20,29 +20,7 @@ const ValidationError = require('../errors/validationError');
  */
 function manageAjvValidationError(err) {
     if (!(err instanceof Ajv.ValidationError)) throw err;
-    // data is invalid
-    // 422
-    // logger.info('Validation errors:', err.errors);
-
-    localize.fr(err.errors); // TODO // Use the language request
-    const errors = err.errors;
-    const errorMapping = errors.reduce((acc, error) => {
-        // Error Key
-        const key = error.dataPath.slice(1);
-        let values = acc[key];
-        if (!values) {
-            values = [];
-            acc[key] = values;
-        }
-        // Error Value
-        const clone = Object.assign({}, error);
-        delete clone.dataPath;
-        delete clone.schemaPath;
-        values.push(clone);
-        return acc;
-    }, {});
-    // logger.info('Validation errors:', errorMapping);
-    throw new ValidationError(err.message, errorMapping);
+    throw   (ValidationError.convertAjvValidationError(err));
 }
 
 
@@ -56,7 +34,7 @@ class ElasticModel {
         this.mapping = mapping;
         if (schema) {
             if (!schema.$async) {
-                schema.$async =true;
+                schema.$async = true;
             }
             this.validator = ajv.compile(schema);
         }
@@ -67,7 +45,7 @@ class ElasticModel {
         if (this.validator) {
             return this.validator(data).catch(manageAjvValidationError);
         } else {
-            return new Promise(resolve=>{
+            return new Promise(resolve => {
                 resolve(data);
             })
         }
@@ -133,7 +111,6 @@ class ElasticModel {
         } else {
             return Promise.reject(new Error("Too much result"));
         }
-        return result;
     }
 
 
@@ -146,17 +123,21 @@ class ElasticModel {
         logger.debug('create model :', data);
         const id = data.id;
         const version = data.version;
-        const body = Object.assign({}, data);
-        let request = {body};
-        if (id) {
-            delete body.id;
-            request = Object.assign(request, {id});
-        }
-        if (version) {
-            delete body.version;
-            request = Object.assign(request, {version});
-        }
-        return client.index(this.defaultOpt(request))
+        const model = Object.assign({}, data);
+        delete model.id;
+        delete model.version;
+        return this.validate(model)
+            .then(body => { // Prepare request
+                let request = id ? Object.assign({body}, {id}) : {body};
+                request = version ? Object.assign({request}, {version}) : request;
+                return request;
+            }).then(request => client.index(this.defaultOpt(request)))
+            .then(this.adaptResponse);
+    }
+
+    update(data, id, version) {
+        return this.validate(data)
+            .then(body => client.index(this.defaultOpt({id, version, body})))
             .then(this.adaptResponse);
     }
 
@@ -164,12 +145,6 @@ class ElasticModel {
         return client.delete(this.defaultOpt({id, version}))
             .then(this.adaptResponse);
     }
-
-    update(body, id, version) {
-        return client.index(this.defaultOpt({id, version, body}))
-            .then(this.adaptResponse);
-    }
-
 
 }
 

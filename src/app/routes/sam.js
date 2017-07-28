@@ -56,24 +56,6 @@ router.del('/:id', (ctx, next) => {
 });
 
 
-/**
- * Update By Id
- */
-router.put('/:id', (ctx, next) => {
-    const id = ctx.params.id;
-    const version = ctx.query.version;
-    const body = ctx.request.body;
-    return Sam.validate(body)
-        .then(data => Sam.update(data, id, version))
-        .then(result => {
-            if (result.created) {
-                delete result.created;
-                ctx.status = 201;
-            }
-            ctx.body = result;
-            return result;
-        });
-});
 
 
 /**
@@ -81,8 +63,7 @@ router.put('/:id', (ctx, next) => {
  */
 router.post('/', (ctx, next) => {
     const body = ctx.request.body;
-    return Sam.validate(body)
-        .then(data => Sam.create(data))
+    return   Sam.create(body)
         .then(result => {
             ctx.body = result;
             if (result.created) {
@@ -92,6 +73,24 @@ router.post('/', (ctx, next) => {
             return result;
         });
 
+});
+
+/**
+ * Update By Id
+ */
+router.put('/:id', (ctx, next) => {
+    const id = ctx.params.id;
+    const version = ctx.query.version;
+    const body = ctx.request.body;
+    return Sam.update(body, id, version)
+        .then(result => {
+            if (result.created) {
+                delete result.created;
+                ctx.status = 201;
+            }
+            ctx.body = result;
+            return result;
+        });
 });
 
 
