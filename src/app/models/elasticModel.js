@@ -22,7 +22,7 @@ function manageAjvValidationError(err) {
     if (!(err instanceof Ajv.ValidationError)) throw err;
     // data is invalid
     // 422
-    logger.info('Validation errors:', err.errors);
+    // logger.info('Validation errors:', err.errors);
 
     localize.fr(err.errors); // TODO // Use the language request
     const errors = err.errors;
@@ -63,7 +63,7 @@ class ElasticModel {
     }
 
     validate(data) {
-        logger.debug('request validate', data);
+        // logger.debug('request validate', data);
         if (this.validator) {
             return this.validator(data).catch(manageAjvValidationError);
         } else {
@@ -121,6 +121,7 @@ class ElasticModel {
         if (result.created) {
             response.created = result.created;
         }
+        // logger.debug("----- adaptResponse", response);
         return response;
     }
 
@@ -142,6 +143,7 @@ class ElasticModel {
     }
 
     create(data) {
+        logger.debug('create model :', data);
         const id = data.id;
         const version = data.version;
         const body = Object.assign({}, data);

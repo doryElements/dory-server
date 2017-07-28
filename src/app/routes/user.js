@@ -1,33 +1,35 @@
 // Logger
 const logger = require('../logger');
 
-const express = require('express');
-const router = express.Router();
+const Router = require('koa-router');
+const router = new Router({
+    prefix: '/users'
+});
+
 const User = require('../models/user');
 const userData = require('../userData').users;
 
-router.get('/',  (req, res, next) => {
+router.get('/',  (ctx, next) => {
     // console.log('req keys', Object.keys(req));
     // console.log('req authInfo',req.authInfo);
-    res.json({message: 'ok', user: req.user, jwt: req.authInfo});
+    ctx.body ={message: 'ok', user: ctx.user, jwt: ctx.authInfo};
 });
 
-router.get('/init', (req, res) => {
-    User.createIndexMappingIndex()
+router.get('/init', (ctx, next) => {
+   return User.createIndexMappingIndex()
         .then(result => {
             logger.debug('createIndexMappingIndex', result);
             return result;
         } )
         .then(result =>   userData.map(user =>  User.create(user) ) )
         .then(promises => Promise.all(promises))
-        .then(results => res.json(results))
-        .catch(err => res.status(500).json(err));
+        .then(results => ctx.body =results);
 });
 
-router.put('/:id/password', (req, res) => {
+router.put('/:id/password', (ctx, next) => {
     const password = 'coucou';
-    User.hashPasswordPromise(password).then(hash=> {
-        res.json({message: 'TODO change password', password, hash});
+    return User.hashPasswordPromise(password).then(hash=> {
+        ctx.body ={message: 'TODO change password', password, hash};
         return hash;
     });
 });

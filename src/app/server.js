@@ -1,106 +1,56 @@
 'use strict';
-const express = require('express');
-const bodyParser = require('body-parser');
-const cors = require('cors');
 
-const jwt = require('jsonwebtoken');
-const auth = require("./auth.js")();
-const uuidv4 = require('uuid/v4');
+// Utils
+const fs = require('fs');
+const path = require('path');
 
 // Logger
 const logger = require('./logger');
-const fs = require('fs');
-const path = require('path');
-const morgan = require('morgan');
-const rfs = require('rotating-file-stream');
 
-// Deps
-const cfg = require("./config.js");
-// Instanciate
-const app = express();
-const port = process.env.PORT || 8181;
+//Server
+const http = require('http');
+const http2 = require('http2');
 
-const routeProfile = require('./routes/profile');
-const routeUser = require('./routes/user');
-const routeSam = require('./routes/sam');
+const Koa = require('koa');
+const app = new Koa();
+const koaBody = require('koa-body');
+const serve = require('koa-static');
 
-const User = require("./models/user");
+// Routes
+const apiRoutes = require('./routes/index');
 
-// const parser = require('./CSV-parse');
+app.use(koaBody());
 
-// =======================
-// === Express Config
-// =======================
-// Log config
-const logDirectory = logger.logDirectory;
-// create a rotating write stream
-const accessLogStream = rfs('access.log', {
-    interval: '1d', // rotate daily
-    path: logDirectory
+
+// look ma, error propagation!
+app.use(async function(ctx, next) {
+    try {
+        await next();
+    } catch (err) {
+        logger.error('---------------------------------------');
+        logger.error('Global error Handling',err);
+        logger.error('---------------------------------------');
+        ctx.status = err.status || 500;
+        ctx.body = { message: err.message, status: ctx.status, errors: err.errors};
+        // since we handled this manually we'll want to delegate to the regular app
+        // level error handling as well so that centralized still functions correctly.
+        ctx.app.emit('error', err, ctx);
+    }
 });
 
-// app.use(morgan('combined', { 'stream': logger.stream}));
-app.use(morgan('combined', {stream: accessLogStream}));
-app.use(morgan('dev'));
-app.use(cors());
 
-// Express
-app.use(auth.initialize());
-const options = {
-    inflate: true,
-    limit: '100kb',
-    type: 'application/json'
-};
-app.use(bodyParser.json(options));
-app.use(bodyParser.urlencoded({extended: false})); // Parses urlencoded bodies
-app.disable('x-powered-by');
-
-
-// =======================
-// Tokens
-// =======================
-// app.use(function(req, res, next){
-//     res.on('close', function(){
-//         const payload = req.authInfo;
-//         console.log('---------------- = req.authInfo', payload);
-//         if (payload) {
-//             const token = jwt.sign(payload, cfg.jwtSecret);
-//             console.log("---------------- Set header token  " + token); // for example
-//             res.set('access_token ', token);
-//         }
-//     });
-//     next();
-// });
-
-// =======================
-// routes
-// =======================
-// basic route
-// app.get('/', (req, res) => {
-//     res.json({
-//         status: "It's Alive! My API is alive!"
-//     });
-// });
-
+// serve staticfiles from ./public
 const staticDirectory = path.join(__dirname, '..',   'web');
-logger.info('static Directory : ' , staticDirectory);
-app.use('/', express.static(staticDirectory));
+logger.info('Serve static file ',staticDirectory);
+app.use(serve( staticDirectory ));
 
+// Api Routes
+app.use(apiRoutes.routes())
+    .use(apiRoutes.allowedMethods());
 
-app.use('/api/users', routeUser);
-app.use('/api/profile',  auth.authenticate(), routeProfile);
-app.use('/api/sams',  auth.authenticate(), routeSam);
-
-
-app.post("/api/login", auth.authenticateLocal(), function (req, res) {
-    const payload = req.authInfo;
-        const token = jwt.sign(payload, cfg.jwtSecret);
-        res.json({
-            message: "ok",
-            token: token
-        });
-});
-
+// app.use(ctx => {
+//     ctx.body = 'Hello World';
+// });
 
 // =======================
 // start the server ======
@@ -111,12 +61,5 @@ const certs = {
     cert: fs.readFileSync(path.join(certsDirectory, 'server.crt'))
 };
 
-require('spdy').createServer(certs, app).listen(port, () => {
-    logger.info('Magic  happens at https://localhost:' + port);
-});
-
-// app.listen(port, () => {
-//     logger.info('Magic  happens at http://localhost:' + port);
-// });
-
-module.exports = app;
+http2.createServer(certs, app.callback()).listen(8181);
+http.createServer(app.callback()).listen(8180);
