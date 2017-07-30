@@ -44,7 +44,7 @@ function strategyValidateUsernamePassword(username, password, done) {
             }
             const payload = createTokenPayload(user);
             const secureUser = cleanUserSecured(user);
-            logger.info('Login strategy for ', secureUser);
+            // logger.info('Login strategy for ', secureUser);
             return done(null, secureUser, payload);
         });
 }
