@@ -33,7 +33,7 @@ function createTokenPayload(user) {
 
 function strategyValidateUsernamePassword(username, password, done) {
     const email = username;
-    logger.debug('strategyValidateUsernamePassword', username);
+    // logger.debug('strategyValidateUsernamePassword', username);
     User.getByEmail({email, secured: true})
         .then(user => {
             if (!user) {
