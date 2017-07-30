@@ -16,7 +16,6 @@ router.post('/login', auth.authenticateLocal() , (ctx, next) => {
     const payload = ctx.state.authInfo;
     const token = jwt.sign(payload, config.jwtSecret);
     ctx.body ={
-        message: "ok",
         token: token
     };
     ctx.set('Access-token', token);

@@ -46,7 +46,9 @@ function strategyValidateUsernamePassword(username, password, done) {
             const secureUser = cleanUserSecured(user);
             // logger.info('Login strategy for ', secureUser);
             return done(null, secureUser, payload);
-        });
+        }).catch(err=> {
+        return done(null, false, {message: err.message});
+    });
 }
 
 passport.use(new LocalStrategy(strategyValidateUsernamePassword));
