@@ -45,7 +45,7 @@ function getClientSettings(options) {
     if (config.logging.elasticsearch) {
         esCfg = Object.assign({}, esCfg, {log: LogClass});
     }
-    logger.debug('Elastic client config', esCfg);
+    // logger.debug('Elastic client config', esCfg);
     return esCfg;
 }
 

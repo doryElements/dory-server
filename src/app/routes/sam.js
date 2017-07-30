@@ -21,11 +21,11 @@ const Sam = require('../models/sam');
  * Search By Params
  */
 router.get('/', (ctx, next) => {
-    ctx.body = {message: 'TODO Search'};
-    // const queryString = req.query;
-    // Sam.getByParams(queryString.app , queryString.fields,  queryString.size, queryString.from).then(result =>{
-    //     return res.json(result);
-    // });
+    const queryString = ctx.query;
+    return Sam.getByParams(queryString.app , queryString.fields,  queryString.size, queryString.from).then(result =>{
+        ctx.body = result;
+        return result;
+    });
 });
 
 

@@ -20,20 +20,19 @@ const serve = require('koa-static');
 const apiRoutes = require('./routes/index');
 
 // Koa Config
+const port = process.env.PORT || 8181;
 app.use(koaBody());
 
 
 // look ma, error propagation!
 app.use((ctx, next) => {
     return next().catch((err) => {
-        logger.error('---------------------------------------');
-        logger.error('Global error Handling', err);
-        logger.error('---------------------------------------');
         ctx.status = err.status || 500;
         ctx.body = {message: err.message, status: ctx.status, errors: err.errors};
         // since we handled this manually we'll want to delegate to the regular app
         // level error handling as well so that centralized still functions correctly.
         ctx.app.emit('error', err, ctx);
+        // logger.error(err);
     });
 });
 
@@ -44,8 +43,7 @@ logger.info('Serve static file ', staticDirectory);
 app.use(serve(staticDirectory));
 
 // Api Routes
-app.use(apiRoutes.routes())
-    .use(apiRoutes.allowedMethods());
+app.use(apiRoutes.routes()).use(apiRoutes.allowedMethods());
 
 // app.use(ctx => {
 //     ctx.body = 'Hello World';
@@ -60,5 +58,8 @@ const certs = {
     cert: fs.readFileSync(path.join(certsDirectory, 'server.crt'))
 };
 
-http2.createServer(certs, app.callback()).listen(8181);
-http.createServer(app.callback()).listen(8180);
+http2.createServer(certs, app.callback()).listen(port, () => {
+    logger.info('Magic  happens at https://localhost:' + port);
+});
+
+// http.createServer(app.callback()).listen(8180);
