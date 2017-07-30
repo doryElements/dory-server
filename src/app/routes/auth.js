@@ -19,7 +19,8 @@ router.post('/login', auth.authenticateLocal() , (ctx, next) => {
         message: "ok",
         token: token
     };
-    ctx.set('Acces-token', token);
+    ctx.set('Access-token', token);
+    ctx.cookies.set('Access-token', token, { httpOnly: false });
 });
 
 
