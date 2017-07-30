@@ -27,9 +27,9 @@ function createTokenPayload(user) {
     return payload;
 }
 
-passport.serializeUser(function(user, done) {
-    done(null, user.id)
-})
+// passport.serializeUser(function(user, done) {
+//     done(null, user.id)
+// })
 
 function strategyValidateUsernamePassword(username, password, done) {
     const email = username;
