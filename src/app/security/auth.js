@@ -9,20 +9,23 @@ const uuidv4 = require('uuid/v4');
 const User = require("../models/user");
 
 
-function cleanUserSecured(user) {
-    const cloneUser = JSON.parse(JSON.stringify(user));
-    delete cloneUser.secured;
-    return cloneUser;
-};
-
 function createTokenPayload(user) {
+    // A JSON numeric value representing the number of seconds from 1970-01-01T00:00:00Z UTC until the specified UTC date/time, ignoring leap seconds.
+    // This is equivalent to the IEEE Std 1003.1, 2013 Edition [POSIX.1] definition "Seconds Since the Epoch", in which each day is accounted for by exactly 86400 seconds, other than that non-integer values can be represented.
+    // See RFC 3339 [RFC3339] for details regarding date/times in general and UTC in particular.
+    const iat = Math.floor(Date.now() / 1000);
+    // Signing a token with 1 hour of expiration:
+    const exp = iat + (60 * 60);
     const payload = {
         jit: uuidv4(),
         iss: "dory-server",
-        sub: user.id,
         aud: "dory",
+        iat: iat,
+        exp: exp,
+        sub: user.id,
         name: user.name,
-        email: user.email
+        email: user.email,
+        roles: user.secured.roles
     };
     return payload;
 }
@@ -43,10 +46,10 @@ function strategyValidateUsernamePassword(username, password, done) {
                 return done(null, false, {message: 'Incorrect password.'});
             }
             const payload = createTokenPayload(user);
-            const secureUser = cleanUserSecured(user);
+            // const secureUser = cleanUserSecured(user);
             // logger.info('Login strategy for ', secureUser);
-            return done(null, secureUser, payload);
-        }).catch(err=> {
+            return done(null, payload);
+        }).catch(err => {
         return done(null, false, {message: err.message});
     });
 }
@@ -54,12 +57,12 @@ function strategyValidateUsernamePassword(username, password, done) {
 passport.use(new LocalStrategy(strategyValidateUsernamePassword));
 
 
-module.exports =   {
-        initialize: () => {
-            return passport.initialize();
-        },
-        authenticateLocal: function() {
-            return passport.authenticate('local', { session: false});
-        }
+module.exports = {
+    initialize: () => {
+        return passport.initialize();
+    },
+    authenticateLocal: function () {
+        return passport.authenticate('local', {session: false});
+    }
 
 };

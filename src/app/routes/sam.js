@@ -9,6 +9,7 @@ const router = new Router({
 const Sam = require('../models/sam');
 
 
+
 // const manageError= function(ctx, next) {
 //     return function (err) {
 //         const status = err.status || 500;
@@ -61,7 +62,7 @@ router.del('/:id', (ctx, next) => {
 /**
  * Create
  */
-router.post('/', (ctx, next) => {
+router.post('/',  (ctx, next) => {
     const body = ctx.request.body;
     return   Sam.create(body)
         .then(result => {

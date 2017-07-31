@@ -4,7 +4,7 @@ const users = [{
     email: "john@mail.com",
     secured: {
         password: "john123",
-        role: [ 'sam']
+        roles: [ 'sam']
     }
 }, {
     id: 2,
@@ -12,7 +12,7 @@ const users = [{
     email: "sarah@mail.com",
     secured: {
         password: "sarah123",
-        role: [ 'admin', 'sam']
+        roles: [ 'admin', 'sam']
     }
 
 }];

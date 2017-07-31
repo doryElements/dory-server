@@ -6,6 +6,9 @@ const router = new Router({
     prefix: '/api'
 });
 
+// Security
+const jwt = require('../security/jwt');
+
 // Routes
 const samRoute = require('./sam');
 const userRoute = require('./user');
@@ -18,7 +21,7 @@ router.use( authRoute.routes(), authRoute.allowedMethods());
 // Api Secured routes
 const securedRoutes = [samRoute, userRoute, profileRoute];
 securedRoutes.forEach(rt=> {
-    router.use( rt.routes(), rt.allowedMethods());
+    router.use( jwt, rt.routes(), rt.allowedMethods());
 });
 
 
