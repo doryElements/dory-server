@@ -6,4 +6,6 @@ const config = require('../config');
 
 module.exports = koaJwt({
     secret: config.jwtSecret, // Should not be hardcoded
+    cookie: 'jwt',
+    debug: true
 });

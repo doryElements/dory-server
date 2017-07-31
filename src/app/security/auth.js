@@ -23,8 +23,12 @@ function createTokenPayload(user) {
         iat: iat,
         exp: exp,
         sub: user.id,
-        name: user.name,
-        email: user.email,
+        context: {
+            user: {
+                name: user.name,
+                email: user.email
+            }
+        },
         roles: user.secured.roles
     };
     return payload;
