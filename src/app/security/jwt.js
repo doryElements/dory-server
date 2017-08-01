@@ -16,8 +16,7 @@ module.exports.decoder =  function(opt) {
     return koaJwt(Object.assign({
         secret: config.jwt.jwtSecret, // Should not be hardcoded
         cookie: config.jwt.cookieName,
-        tokenKey: 'jwtToken',
-        debug: true
+        tokenKey: 'jwtToken'
     },opt));
 }
 
