@@ -100,16 +100,16 @@ function mergeEnvs(list){
             newEnv['vips']=vips;
             newEnv['serveurs']=servers;
 
-            mergedApps[mergedApps.length-1][element.Env] = newEnv;
+            mergedApps[mergedApps.length-1][element.Env.toLowerCase()] = newEnv;
         }
         else{
             newApp.app = element.Application;
-            newApp[element.Env] = {};
-            newApp[element.Env]['softwares'] = softwares;
-            newApp[element.Env]['urls'] = urls;
-            newApp[element.Env]['bdds'] = bdds;
-            newApp[element.Env]['vips'] = vips;
-            newApp[element.Env]['serveurs'] = servers;
+            newApp[element.Env.toLowerCase()] = {};
+            newApp[element.Env.toLowerCase()]['softwares'] = softwares;
+            newApp[element.Env.toLowerCase()]['urls'] = urls;
+            newApp[element.Env.toLowerCase()]['bdds'] = bdds;
+            newApp[element.Env.toLowerCase()]['vips'] = vips;
+            newApp[element.Env.toLowerCase()]['serveurs'] = servers;
             mergedApps.push(newApp);
         }
     });
