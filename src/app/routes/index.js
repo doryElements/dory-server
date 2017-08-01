@@ -8,6 +8,7 @@ const router = new Router({
 
 // Security
 const jwt = require('../security/jwt');
+// const rbac = require('../security/rbac').rbac;
 
 // Routes
 const samRoute = require('./sam');
@@ -20,8 +21,10 @@ router.use( authRoute.routes(), authRoute.allowedMethods());
 
 // Api Secured routes
 const securedRoutes = [samRoute, userRoute, profileRoute];
+// const check = rbac.check({'allow': 'admin'});
+
 securedRoutes.forEach(rt=> {
-    router.use( jwt, rt.routes(), rt.allowedMethods());
+    router.use( jwt,  rt.routes(), rt.allowedMethods());
 });
 
 

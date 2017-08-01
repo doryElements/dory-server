@@ -18,9 +18,11 @@ const serve = require('koa-static');
 
 // Routes
 const apiRoutes = require('./routes/index');
+const rbacMiddleware = require('./security/rbac').middleware;
 
 // Koa Config
 const port = process.env.PORT || 8181;
+app.use(rbacMiddleware);
 app.use(koaBody());
 
 
