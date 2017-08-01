@@ -19,7 +19,7 @@ router.post('/login', auth.authenticateLocal() , (ctx, next) => {
         token: token
     };
     ctx.set('Access-token', token);
-    ctx.cookies.set('Access-token', token, { httpOnly: false });
+    ctx.cookies.set('Access-token', token, { httpOnly: true, secure: true  });
 });
 
 
