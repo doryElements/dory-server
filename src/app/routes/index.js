@@ -7,7 +7,7 @@ const router = new Router({
 });
 
 // Security
-const jwtDecoder = require('../security/jwt').decoder;
+const jwtDecoder = require('../security/jwt').decoder();
 // const rbac = require('../security/rbac').rbac;
 
 // Routes

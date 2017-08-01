@@ -92,7 +92,7 @@ class ElasticModel {
     adaptResponse(result) {
         // logger.debug("----- adaptResponse", result);
         const source = result._source;
-        let response = {id: result._id, version: result._version};
+        let response = {_score:result._score, id: result._id, version: result._version,  };
         if (source) {
             response = Object.assign(response, source);
         }

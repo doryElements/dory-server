@@ -22,12 +22,12 @@ const apiRoutes = require('./routes/index');
 
 // Config
 const config = require('./config');
-const jwtSecurity = require('./security/jwt').encoderMiddleware;
+const encodeJwtTokenInHeadersCookies = require('./security/jwt').encodeJwtTokenInHeadersCookies();
 const rbacMiddleware = require('./security/rbac').middleware;
 
 // Koa Config
 const port = process.env.PORT || 8181;
-app.use(rbacMiddleware);
+// app.use(rbacMiddleware);
 app.use(koaBody());
 
 
@@ -61,7 +61,8 @@ app.use((ctx, next) => {
 // });
 
 
-app.use(jwtSecurity);
+app.use(encodeJwtTokenInHeadersCookies);
+
 
 // serve staticfiles from ./public
 const staticDirectory = path.join(__dirname, '..', 'web');
@@ -70,7 +71,6 @@ app.use(serve(staticDirectory));
 
 // Api Routes
 app.use(apiRoutes.routes()).use(apiRoutes.allowedMethods());
-
 
 // =======================
 // start the server ======

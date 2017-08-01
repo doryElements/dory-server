@@ -6,7 +6,6 @@ const LocalStrategy = require('passport-local').Strategy;
 
 const jwtSecurity = require('./jwt');
 
-const config = require("../config");
 const User = require("../models/user");
 
 
@@ -19,6 +18,7 @@ const User = require("../models/user");
 function strategyValidateUsernamePassword(username, password, done) {
     const email = username;
     // logger.debug('strategyValidateUsernamePassword', username);
+    logger.info('Try login with ',username, '=' , 'xxxxxx');
     User.getByEmail({email, secured: true})
         .then(user => {
             if (!user) {
@@ -30,6 +30,7 @@ function strategyValidateUsernamePassword(username, password, done) {
             const payload = jwtSecurity.createTokenPayload(user);
             // const secureUser = cleanUserSecured(user);
             // logger.info('Login strategy for ', secureUser);
+            logger.info('Login strategy for ', payload);
             return done(null, payload);
         }).catch(err => {
         return done(null, false, {message: err.message});

@@ -40,6 +40,16 @@ class SamModel extends ElasticModel {
     constructor() {
         super({indexName, indexType, mapping, schema});
     }
+    adaptSearchResponse(result,size, from) {
+        const hits = result.hits;
+        const response = {
+            total: hits.total,
+            size:size,
+            from:from,
+            hits: hits.hits.map(line => this.adaptResponse(line))
+        };
+        return response;
+    }
 
     getByParams(searchText = '', searchFields = ['app', 'tags'], size = 10, from = 0) {
         const request = this.defaultOpt({
@@ -55,7 +65,8 @@ class SamModel extends ElasticModel {
             }
         });
 
-        return client.search(request);
+        return client.search(request)
+            .then(result => this.adaptSearchResponse(result,size, from));
     }
 
 }
