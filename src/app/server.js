@@ -12,6 +12,7 @@ const http = require('http');
 const http2 = require('http2');
 
 const Koa = require('koa');
+// const jwt = require('koa-jwt');
 const app = new Koa();
 const koaBody = require('koa-body');
 const serve = require('koa-static');
@@ -23,6 +24,10 @@ const apiRoutes = require('./routes/index');
 const port = process.env.PORT || 8181;
 app.use(koaBody());
 
+// Config
+const config = require('./config');
+const jwt = require('jsonwebtoken');
+const ms = require('ms');
 
 // look ma, error propagation!
 app.use((ctx, next) => {
@@ -36,6 +41,23 @@ app.use((ctx, next) => {
     });
 });
 
+// Token/Cookie update middleware
+app.use((ctx,next) => {
+    let token = ctx.cookies.get(config.jwt.cookieName);
+    if(token && jwt.verify(token,config.jwt.jwtSecret)){
+        logger.debug('Update cookie and token');
+        logger.debug('Token',jwt.decode(token,config.jwt.jwtSecret));
+
+        let payload= jwt.decode(token,config.jwt.jwtSecret);
+        payload.iat = Math.floor(Date.now() / 1000);
+        payload.exp = payload.iat + ms(config.jwt.expiration);
+        token = jwt.sign(payload, config.jwt.jwtSecret);
+
+        ctx.cookies.set(config.jwt.cookieName, token, { httpOnly: true, secure: true, expires : new Date(Date.now()+ms(config.jwt.expiration))});
+    }
+    return next();
+});
+
 
 // serve staticfiles from ./public
 const staticDirectory = path.join(__dirname, '..', 'web');
@@ -45,9 +67,6 @@ app.use(serve(staticDirectory));
 // Api Routes
 app.use(apiRoutes.routes()).use(apiRoutes.allowedMethods());
 
-// app.use(ctx => {
-//     ctx.body = 'Hello World';
-// });
 
 // =======================
 // start the server ======
@@ -61,5 +80,3 @@ const certs = {
 http2.createServer(certs, app.callback()).listen(port, () => {
     logger.info('Magic  happens at https://localhost:' + port);
 });
-
-// http.createServer(app.callback()).listen(8180);
