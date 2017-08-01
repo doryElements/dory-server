@@ -7,7 +7,7 @@ const router = new Router({
 });
 
 // Security
-const jwt = require('../security/jwt');
+const jwtDecoder = require('../security/jwt').decoder;
 // const rbac = require('../security/rbac').rbac;
 
 // Routes
@@ -24,7 +24,7 @@ const securedRoutes = [samRoute, userRoute, profileRoute];
 // const check = rbac.check({'allow': 'admin'});
 
 securedRoutes.forEach(rt=> {
-    router.use( jwt,  rt.routes(), rt.allowedMethods());
+    router.use( jwtDecoder,  rt.routes(), rt.allowedMethods());
 });
 
 

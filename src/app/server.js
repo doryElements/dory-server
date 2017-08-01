@@ -19,6 +19,10 @@ const serve = require('koa-static');
 
 // Routes
 const apiRoutes = require('./routes/index');
+
+// Config
+const config = require('./config');
+const jwtSecurity = require('./security/jwt').encoderMiddleware;
 const rbacMiddleware = require('./security/rbac').middleware;
 
 // Koa Config
@@ -26,10 +30,6 @@ const port = process.env.PORT || 8181;
 app.use(rbacMiddleware);
 app.use(koaBody());
 
-// Config
-const config = require('./config');
-const jwt = require('jsonwebtoken');
-const ms = require('ms');
 
 // look ma, error propagation!
 app.use((ctx, next) => {
@@ -44,22 +44,24 @@ app.use((ctx, next) => {
 });
 
 // Token/Cookie update middleware
-app.use((ctx,next) => {
-    let token = ctx.cookies.get(config.jwt.cookieName);
-    if(token && jwt.verify(token,config.jwt.jwtSecret)){
-        logger.debug('Update cookie and token');
-        logger.debug('Token',jwt.decode(token,config.jwt.jwtSecret));
+// app.use((ctx,next) => {
+//     let token = ctx.cookies.get(config.jwt.cookieName);
+//     if(token && jwt.verify(token,config.jwt.jwtSecret)){
+//         logger.debug('Update cookie and token');
+//         logger.debug('Token',jwt.decode(token,config.jwt.jwtSecret));
+//
+//         let payload= jwt.decode(token,config.jwt.jwtSecret);
+//         payload.iat = Math.floor(Date.now() / 1000);
+//         payload.exp = payload.iat + ms(config.jwt.expiration);
+//         token = jwt.sign(payload, config.jwt.jwtSecret);
+//
+//         ctx.cookies.set(config.jwt.cookieName, token, { httpOnly: true, secure: true, expires : new Date(Date.now()+ms(config.jwt.expiration))});
+//     }
+//     return next();
+// });
 
-        let payload= jwt.decode(token,config.jwt.jwtSecret);
-        payload.iat = Math.floor(Date.now() / 1000);
-        payload.exp = payload.iat + ms(config.jwt.expiration);
-        token = jwt.sign(payload, config.jwt.jwtSecret);
 
-        ctx.cookies.set(config.jwt.cookieName, token, { httpOnly: true, secure: true, expires : new Date(Date.now()+ms(config.jwt.expiration))});
-    }
-    return next();
-});
-
+app.use(jwtSecurity);
 
 // serve staticfiles from ./public
 const staticDirectory = path.join(__dirname, '..', 'web');
