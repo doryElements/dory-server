@@ -5,7 +5,9 @@ const passport = require('koa-passport');
 const LocalStrategy = require('passport-local').Strategy;
 
 const uuidv4 = require('uuid/v4');
+const ms = require('ms');
 
+const config = require("../config");
 const User = require("../models/user");
 
 
@@ -15,7 +17,7 @@ function createTokenPayload(user) {
     // See RFC 3339 [RFC3339] for details regarding date/times in general and UTC in particular.
     const iat = Math.floor(Date.now() / 1000);
     // Signing a token with 1 hour of expiration:
-    const exp = iat + (60 * 60);
+    const exp = iat + ms(config.jwt.expiration);
     const payload = {
         jit: uuidv4(),
         iss: "dory-server",

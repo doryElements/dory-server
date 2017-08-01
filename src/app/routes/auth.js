@@ -14,7 +14,7 @@ const config = require('../config');
 // POST /login
 router.post('/login', auth.authenticateLocal() , (ctx, next) => {
     const payload = ctx.state.user;
-    const token = jwt.sign(payload, config.jwtSecret);
+    const token = jwt.sign(payload, config.jwt.jwtSecret);
     ctx.body ={
         token: token
     };
