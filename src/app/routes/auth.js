@@ -18,6 +18,7 @@ router.post('/login', auth.authenticateLocal() , (ctx, next) => {
     ctx.body ={
         user: payload.context.user
     };
+    ctx.redirect('/');
 });
 
 
