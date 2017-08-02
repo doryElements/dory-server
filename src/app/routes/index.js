@@ -8,7 +8,7 @@ const router = new Router({
 
 // Security
 const jwtDecoder = require('../security/jwt').decoder();
-// const rbac = require('../security/rbac').rbac;
+// const rbac = require('../security/rbac');
 
 // Routes
 const samRoute = require('./sam');
@@ -23,8 +23,13 @@ router.use( authRoute.routes(), authRoute.allowedMethods());
 const securedRoutes = [samRoute, userRoute, profileRoute];
 // const check = rbac.check({'allow': 'admin'});
 
+function traceMd(ctx, next) {
+    logger.debug('traceMd state ', ctx.state);
+    return next();
+}
+
 securedRoutes.forEach(rt=> {
-    router.use( jwtDecoder,  rt.routes(), rt.allowedMethods());
+    router.use( jwtDecoder, traceMd,     rt.routes(), rt.allowedMethods());
 });
 
 

@@ -1,5 +1,6 @@
 // config.js
-module.exports = {
+
+const configDory =  {
     jwt: {
         jwtSecret: 'superman est ridicule en collant de fille',
         expiration: '30m',
@@ -20,3 +21,5 @@ module.exports = {
         }
     }
 };
+
+module.exports = configDory;

@@ -9,17 +9,19 @@ class CustomProvider extends Provider {
 
 
     getRoles(user) {
-        logger.debug('getRoles user', user);
+        logger.debug('CustomProvider getRoles user', user);
         return new Promise((resolve, reject) => {
-            const roles = user.context.roles;
+            const roles = user.roles;
+            logger.debug('CustomProvider getRoles user', user, '==+> ', roles);
             resolve(roles);
         });
     }
     getPermissions(role) {
-        logger.debug('getPermissions roles', role);
+        logger.debug('CustomProvider getPermissions roles', role);
         return [role];
     }
     getAttributes(role) {
+        logger.debug('CustomProvider getAttributes roles', role);
         return [];
     }
 }
@@ -52,6 +54,7 @@ class CompositeProvider extends Provider {
 
     getAttributes(role) {
         // NOTE : ignore custom provider, here
+        logger.debug('getAttributes roles', role );
         return this.json.getAttributes(role);
     }
 }
@@ -69,4 +72,5 @@ const options = {
 
 
 module.exports.middleware = rbac.middleware(options);
+module.exports.check = rbac.check;
 module.exports.rbac = rbac;

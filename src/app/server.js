@@ -25,12 +25,12 @@ const apiRoutes = require('./routes/index');
 // Config
 const config = require('./config');
 const encodeJwtTokenInHeadersCookies = require('./security/jwt').encodeJwtTokenInHeadersCookies();
-const rbacMiddleware = require('./security/rbac').middleware;
+// const rbacMiddleware = require('./security/rbac').middleware;
 
 // Koa Config
 const port = process.env.PORT || 8181;
-// app.use(rbacMiddleware);
 app.use(koaBody());
+
 
 
 // look ma, error propagation!
@@ -53,9 +53,9 @@ const staticWeb =serve(staticDirectory);
 staticWeb.unless = unless;
 app.use(staticWeb.unless({path: ['/api']}));
 
-
+// Security
 app.use(encodeJwtTokenInHeadersCookies);
-
+// app.use(rbacMiddleware);
 
 // Api Routes
 app.use(apiRoutes.routes()).use(apiRoutes.allowedMethods());
