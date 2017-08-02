@@ -1,32 +1,54 @@
 'use strict';
 
+/**
+ * Utils dependencies.
+ */
 // Utils
 const fs = require('fs');
 const path = require('path');
-
 // Logger
 const logger = require('./logger');
-
 //Server
-const http = require('http');
 const http2 = require('http2');
 
+/**
+ * Koa dependencies.
+ */
 const Koa = require('koa');
-// const jwt = require('koa-jwt');
-const app = new Koa();
 const koaBody = require('koa-body');
 const serve = require('koa-static');
+const unless = require('koa-unless');
+const responseTime = require('koa-response-time');
+const compress = require('koa-compress');
+// const ratelimit = require('koa-ratelimit');
 
+
+/**
+ * Project dependencies.
+ */
+// Config
+const config = require('./config');
+// Security
+const encodeJwtTokenInHeadersCookies = require('./security/jwt').encodeJwtTokenInHeadersCookies();
+const rbacMiddleware = require('./security/rbac').middleware;
 // Routes
 const apiRoutes = require('./routes/index');
 
-// Config
-const config = require('./config');
-const encodeJwtTokenInHeadersCookies = require('./security/jwt').encodeJwtTokenInHeadersCookies();
-// const rbacMiddleware = require('./security/rbac').middleware;
+/**
+ * Environment.
+ */
 
-// Koa Config
+const env = process.env.NODE_ENV || 'development';
 const port = process.env.PORT || 8181;
+
+
+/**
+ * Koa Server.
+ */
+const app = new Koa();
+
+app.use(responseTime());
+app.use(compress());
 app.use(koaBody());
 
 
@@ -49,11 +71,13 @@ app.use((ctx, next) => {
 // serve staticfiles from ./public
 const staticDirectory = path.join(__dirname, '..', 'web');
 logger.info('Serve static file ', staticDirectory);
-app.use(serve(staticDirectory));
+const staticWeb =serve(staticDirectory);
+staticWeb.unless = unless;
+app.use(staticWeb.unless({path: ['/api']}));
 
 // Security
 app.use(encodeJwtTokenInHeadersCookies);
-// app.use(rbacMiddleware);
+app.use(rbacMiddleware);
 
 // Api Routes
 app.use(apiRoutes.routes()).use(apiRoutes.allowedMethods());

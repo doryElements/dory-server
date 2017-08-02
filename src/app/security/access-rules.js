@@ -19,10 +19,13 @@ const rules = {
             "inherited": ["reader", "editor"],
         },
         "admin": {
-            "permissions": ["manage"],
-            "inherited": ["director"],
-            "attributes": ["hasSuperPrivilege"]
+            "permissions": ["manage", "admin2"],
+            "inherited": ["director"]
         }
+    },
+    "users": {
+        "john.smith": ["writer"],
+        "Sarah": ["admin"]
     }
 
 };

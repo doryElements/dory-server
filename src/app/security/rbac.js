@@ -9,17 +9,24 @@ class CustomProvider extends Provider {
 
 
     getRoles(user) {
-        logger.debug('CustomProvider getRoles user', user);
         return new Promise((resolve, reject) => {
             const roles = user.roles;
-            logger.debug('CustomProvider getRoles user', user, '==+> ', roles);
-            resolve(roles);
+            let userRoles= {};
+            if (roles) {
+                userRoles= roles.map(role => {
+                    return {[role]: {}}
+                });
+            }
+            logger.debug('...user', user, '==+> ', JSON.stringify( userRoles));
+            resolve(userRoles);
         });
     }
+
     getPermissions(role) {
         logger.debug('CustomProvider getPermissions roles', role);
-        return [role];
+        return [];
     }
+
     getAttributes(role) {
         logger.debug('CustomProvider getAttributes roles', role);
         return [];
@@ -36,25 +43,26 @@ class CompositeProvider extends Provider {
 
     getRoles(user) {
         // NOTE : ignore JSON provider, here
-        logger.debug('user roles', this.custom.getRoles(user) );
         return this.custom.getRoles(user);
     }
 
     getPermissions(role) {
-        logger.debug('getPermissions role', role );
-        return Promise.all([
-            this.json.getPermissions(role),
-            this.custom.getPermissions(role)
-        ]).then(function (permissionLists) {
-            const jsonPermissions = permissionLists[0] || [];
-            const customPermissions = permissionLists[1] || [];
-            return jsonPermissions.push.apply(jsonPermissions, customPermissions);
-        });
+        return  this.json.getPermissions(role);
+        // return Promise.all([
+        //     this.json.getPermissions(role),
+        //     this.custom.getPermissions(role)
+        // ]).then(function (permissionLists) {
+        //     const jsonPermissions = permissionLists[0] || [];
+        //     const customPermissions = permissionLists[1] || [];
+        //     return jsonPermissions.push.apply(jsonPermissions, customPermissions);
+        // }).then(perms=> {
+        //     logger.debug('getPermissions role', role, ' ==>', JSON.stringify(perms));
+        //     return perms;
+        // });
     }
 
     getAttributes(role) {
         // NOTE : ignore custom provider, here
-        logger.debug('getAttributes roles', role );
         return this.json.getAttributes(role);
     }
 }
