@@ -94,7 +94,7 @@ class ElasticModel {
         const source = result._source;
         let response = {_score:result._score, id: result._id, version: result._version,  };
         if (source) {
-            response = Object.assign(response, source);
+            response = Object.assign({}, response, source);
         }
         if (result.created) {
             response.created = result.created;

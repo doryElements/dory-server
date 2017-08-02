@@ -18,7 +18,7 @@ module.exports.decoder =  function(opt) {
         cookie: config.jwt.cookieName,
         tokenKey: 'jwtToken'
     },opt));
-}
+};
 
 
 /**
@@ -29,7 +29,7 @@ module.exports.decoder =  function(opt) {
 function genJwtExpirationData(now = Date.now()) {
     const iat = Math.floor(now / 1000);
     const exp = Math.floor((now + expirationTimeInMs)/1000);
-    return {exp, iat}
+    return {exp, iat};
 }
 
 function createTokenPayload(user) {
@@ -63,7 +63,7 @@ function isNeedRegenToken(payload) {
         isRegen = nowInS > (payload.iat + (0.6 * (payload.exp - payload.iat)));
     }
     if (isRegen) {
-        return {now, contextHash}
+        return {now, contextHash};
     }
     return undefined;
 }

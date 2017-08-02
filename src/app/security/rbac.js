@@ -59,7 +59,10 @@ class CompositeProvider extends Provider {
 const options = {
     rbac: new rbac.RBAC({
         provider: new CompositeProvider(rules)
-    })
+    }),
+    identity: function (ctx) {
+        return ctx && ctx.state && ctx.state.user;
+    }
     // identity(ctx) { return ctx && ctx.user } // passes `user` to rbac-a provider
     // restrictionHandler(ctx, permissions, redirectUrl) { ctx.status = 403; }   // manually handle restricted responses
 };

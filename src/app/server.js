@@ -43,31 +43,17 @@ app.use((ctx, next) => {
     });
 });
 
-// Token/Cookie update middleware
-// app.use((ctx,next) => {
-//     let token = ctx.cookies.get(config.jwt.cookieName);
-//     if(token && jwt.verify(token,config.jwt.jwtSecret)){
-//         logger.debug('Update cookie and token');
-//         logger.debug('Token',jwt.decode(token,config.jwt.jwtSecret));
-//
-//         let payload= jwt.decode(token,config.jwt.jwtSecret);
-//         payload.iat = Math.floor(Date.now() / 1000);
-//         payload.exp = payload.iat + ms(config.jwt.expiration);
-//         token = jwt.sign(payload, config.jwt.jwtSecret);
-//
-//         ctx.cookies.set(config.jwt.cookieName, token, { httpOnly: true, secure: true, expires : new Date(Date.now()+ms(config.jwt.expiration))});
-//     }
-//     return next();
-// });
 
-
-app.use(encodeJwtTokenInHeadersCookies);
 
 
 // serve staticfiles from ./public
 const staticDirectory = path.join(__dirname, '..', 'web');
 logger.info('Serve static file ', staticDirectory);
 app.use(serve(staticDirectory));
+
+
+app.use(encodeJwtTokenInHeadersCookies);
+
 
 // Api Routes
 app.use(apiRoutes.routes()).use(apiRoutes.allowedMethods());
