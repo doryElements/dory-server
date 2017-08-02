@@ -12,12 +12,12 @@ const jwt = require('jsonwebtoken');
 const config = require('../config');
 const expirationTimeInMs = ms(config.jwt.expiration);
 
-module.exports.decoder =  function(opt) {
+module.exports.decoder = function (opt) {
     return koaJwt(Object.assign({
         secret: config.jwt.jwtSecret, // Should not be hardcoded
         cookie: config.jwt.cookieName,
         tokenKey: 'jwtToken'
-    },opt));
+    }, opt));
 };
 
 
@@ -28,7 +28,7 @@ module.exports.decoder =  function(opt) {
  */
 function genJwtExpirationData(now = Date.now()) {
     const iat = Math.floor(now / 1000);
-    const exp = Math.floor((now + expirationTimeInMs)/1000);
+    const exp = Math.floor((now + expirationTimeInMs) / 1000);
     return {exp, iat};
 }
 
@@ -72,24 +72,26 @@ module.exports.encodeJwtTokenInHeadersCookies = function () {
     return function encodeJwtTokenInHeadersCookies(ctx, next) {
         return next().then(() => {
             let payload = ctx.state.user;
-            let token = ctx.state.jwtToken;
-            const isNeedRegen = isNeedRegenToken(payload);
-            if (!token || isNeedRegen) {
-                const {now, contextHash} = isNeedRegen;
-                payload = Object.assign({}, payload, genJwtExpirationData(now), {contextHash});
-                ctx.state.user = payload;
-                token = jwt.sign(payload, config.jwt.jwtSecret);
-                logger.debug('Re generate token : ', {token, contextHash});
-            }
-            // JWT send in Headers
-            ctx.set('Access-token', token);
-            // JWT send in Cookies
-            if (config.jwt.cookieName) {
-                ctx.cookies.set(config.jwt.cookieName, token, {
-                    httpOnly: true,
-                    secure: true,
-                    expires: new Date(payload.exp * 1000)
-                });
+            if (payload) {
+                let token = ctx.state.jwtToken;
+                const isNeedRegen = isNeedRegenToken(payload);
+                if (!token || isNeedRegen) {
+                    const {now, contextHash} = isNeedRegen;
+                    payload = Object.assign({}, payload, genJwtExpirationData(now), {contextHash});
+                    ctx.state.user = payload;
+                    token = jwt.sign(payload, config.jwt.jwtSecret);
+                    logger.debug('Re generate token : ', {token, contextHash});
+                }
+                // JWT send in Headers
+                ctx.set('Access-token', token);
+                // JWT send in Cookies
+                if (config.jwt.cookieName) {
+                    ctx.cookies.set(config.jwt.cookieName, token, {
+                        httpOnly: true,
+                        secure: true,
+                        expires: new Date(payload.exp * 1000)
+                    });
+                }
             }
         });
     }

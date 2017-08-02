@@ -15,9 +15,11 @@ const Koa = require('koa');
 // const jwt = require('koa-jwt');
 const app = new Koa();
 const koaBody = require('koa-body');
-const serve = require('koa-static');
+
 
 // Routes
+const serve = require('koa-static');
+const unless = require('koa-unless');
 const apiRoutes = require('./routes/index');
 
 // Config
@@ -44,12 +46,12 @@ app.use((ctx, next) => {
 });
 
 
-
-
 // serve staticfiles from ./public
 const staticDirectory = path.join(__dirname, '..', 'web');
 logger.info('Serve static file ', staticDirectory);
-app.use(serve(staticDirectory));
+const staticWeb =serve(staticDirectory);
+staticWeb.unless = unless;
+app.use(staticWeb.unless({path: ['/api']}));
 
 
 app.use(encodeJwtTokenInHeadersCookies);
