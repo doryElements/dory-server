@@ -65,15 +65,24 @@ app.use((ctx, next) => {
     });
 });
 
+const conditional = require('koa-conditional-get');
+const etag = require('koa-etag');
 
-
+// app.use(conditional());
+// app.use(etag());
 
 // serve staticfiles from ./public
+// const staticDirectory =serve(path.normalize('C:\\project\\DoryElements\\dory-app'));
+// const staticDirectory =serve(path.normalize('/project/DoryElements/dory-app'));
 const staticDirectory = path.join(__dirname, '..', 'web');
+// const staticDirectory =  path.normalize(  __dirname+ '/../web');
+// const staticDirectory =  path.normalize(   'c:/project/DoryElements/dory-app');
 logger.info('Serve static file ', staticDirectory);
 const staticWeb =serve(staticDirectory);
 staticWeb.unless = unless;
 app.use(staticWeb.unless({path: ['/api']}));
+
+
 
 // Security
 app.use(encodeJwtTokenInHeadersCookies);

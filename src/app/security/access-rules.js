@@ -24,9 +24,9 @@ const rules = {
         }
     },
     "users": {
-        "john.smith": ["writer"],
+    "john.smith": ["writer"],
         "Sarah": ["admin"]
-    }
+}
 
 };
 
