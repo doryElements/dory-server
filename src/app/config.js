@@ -19,6 +19,9 @@ const configDory =  {
         console: {
             level: 'debug'
         }
+    },
+    web: {
+        folder: '../dory-app'
     }
 };
 

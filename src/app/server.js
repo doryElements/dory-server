@@ -76,8 +76,8 @@ app.use((ctx, next) => {
 // const staticDirectory =serve(path.normalize('/project/DoryElements/dory-app'));
 // const staticDirectory = path.join(__dirname, '..', 'web');
 // const staticDirectory =  path.normalize(  __dirname+ '/../web');
-const staticDirectory =  path.normalize(   'c:/project/DoryElements/dory-app');
-logger.info('Serve static file ', staticDirectory);
+const staticDirectory =  path.normalize( config.web.folder);
+logger.info('Serve static file ', staticDirectory, path.resolve(staticDirectory));
 const staticWeb =serve(staticDirectory);
 staticWeb.unless = unless;
 app.use(staticWeb.unless({path: ['/api']}));
@@ -99,7 +99,7 @@ const certs = {
     key: fs.readFileSync(path.join(certsDirectory, 'server.key')),
     cert: fs.readFileSync(path.join(certsDirectory, 'server.crt'))
 };
-
+require('events').EventEmitter.defaultMaxListeners = 0;
 http2.createServer(certs, app.callback()).listen(port, () => {
     logger.info('Magic  happens at https://localhost:' + port);
 });
