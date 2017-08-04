@@ -1,0 +1,28 @@
+{
+  "src/my-app.html": {
+    "src/my-view1.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "src/my-app.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "src/my-view2.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "src/my-view3.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "src/my-view404.html": {
+      "type": "document",
+      "weight": 1
+    }
+  },
+  "src/my-view1.html": {},
+  "src/my-view2.html": {},
+  "src/my-view3.html": {},
+  "src/my-view404.html": {}
+}

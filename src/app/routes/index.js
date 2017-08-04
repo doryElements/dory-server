@@ -21,7 +21,7 @@ router.use( authRoute.routes(), authRoute.allowedMethods());
 
 // Api Secured routes
 const securedRoutes = [samRoute, userRoute, profileRoute];
-// const check = rbac.check({'allow': 'admin'});
+// const check = rbac.check({'allow': 'admin'});git sy
 
 // function traceMd(ctx, next) {
 //     logger.debug('--------------- traceMd state ', JSON.stringify( ctx.state));
