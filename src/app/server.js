@@ -74,9 +74,9 @@ app.use((ctx, next) => {
 // serve staticfiles from ./public
 // const staticDirectory =serve(path.normalize('C:\\project\\DoryElements\\dory-app'));
 // const staticDirectory =serve(path.normalize('/project/DoryElements/dory-app'));
-const staticDirectory = path.join(__dirname, '..', 'web');
+// const staticDirectory = path.join(__dirname, '..', 'web');
 // const staticDirectory =  path.normalize(  __dirname+ '/../web');
-// const staticDirectory =  path.normalize(   'c:/project/DoryElements/dory-app');
+const staticDirectory =  path.normalize(   'c:/project/DoryElements/dory-app');
 logger.info('Serve static file ', staticDirectory);
 const staticWeb =serve(staticDirectory);
 staticWeb.unless = unless;

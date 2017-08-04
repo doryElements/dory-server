@@ -22,4 +22,11 @@ router.post('/login', auth.authenticateLocal() , (ctx, next) => {
 });
 
 
+router.post('/tokens', auth.authenticateLocal() , (ctx, next) => {
+    const payload = ctx.state.user;
+    ctx.body ={
+        user: payload.context.user
+    };
+});
+
 module.exports = router;
