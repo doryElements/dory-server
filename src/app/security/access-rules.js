@@ -1,8 +1,8 @@
 const rules = {
     "roles": {
         "guest": {},
-        "reader": {
-            "permissions": ["read"],
+        "sam": {
+            "permissions": ["read", "create", "update", "delete" ],
             "inherited": ["guest"]
         },
         "writer": {

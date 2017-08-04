@@ -22,6 +22,6 @@ const configDory =  {
     }
 };
 
-// delete configDory.jwt.cookieName;
+delete configDory.jwt.cookieName;
 
 module.exports = configDory;

@@ -30,7 +30,7 @@ const compress = require('koa-compress');
 const config = require('./config');
 // Security
 const encodeJwtTokenInHeadersCookies = require('./security/jwt').encodeJwtTokenInHeadersCookies();
-const rbacMiddleware = require('./security/rbac').middleware;
+// const rbacMiddleware = require('./security/rbac').middleware;
 // Routes
 const apiRoutes = require('./routes/index');
 
@@ -65,8 +65,8 @@ app.use((ctx, next) => {
     });
 });
 
-const conditional = require('koa-conditional-get');
-const etag = require('koa-etag');
+// const conditional = require('koa-conditional-get');
+// const etag = require('koa-etag');
 
 // app.use(conditional());
 // app.use(etag());
@@ -86,7 +86,7 @@ app.use(staticWeb.unless({path: ['/api']}));
 
 // Security
 app.use(encodeJwtTokenInHeadersCookies);
-app.use(rbacMiddleware);
+// app.use(rbacMiddleware);
 
 // Api Routes
 app.use(apiRoutes.routes()).use(apiRoutes.allowedMethods());
