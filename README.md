@@ -14,7 +14,7 @@ curl -H "Content-Type: application/json" -X POST -d '{"email":"john@mail.com","p
 
 # TODO
 ## TODO Server 
-1. Renvoyer le token JWT dans un cookie (en service middleware, impact sur auth.js qui récupère le token)
+
 1. Intégration du projet dory-app dans dory-server (ficier html de l'IHM dans le projet bower, ajout d'un répertoire static servi par express)
 1. Implémentation de toutes les règles de validations des entité SAM
 1. Mise en place de la sécurtité d'accès par Rôle (role positionné dans le token)
@@ -26,12 +26,11 @@ curl -H "Content-Type: application/json" -X POST -d '{"email":"john@mail.com","p
 Déplacer les taches faites dans ce menu
 1. Mécanisme de validation des JSON avec convertion du format d'erreur 422 
 1. Mise en place de HTTP/2
+1. Renvoyer le token JWT dans un cookie (en service middleware, impact sur auth.js qui récupère le token)
 
 ## IHM
 1. Integration de dory-sam dans le projet dory-app (pour utiliser les patterns PRPL)
 1. Mise en place des écrans de logins
-1. Pointer les service REST sur le Server nodejs dory-server
-1. Intégrer earth-cruddy pour gérer la persistence  https://github.com/FiveElements/earth-cruddy
 1. IntégrerMise en place d'un custom style https://www.polymer-project.org/2.0/docs/devguide/style-shadow-dom#custom-style
 1. Travailler sur les le coté jolie de l'IHM d'édition
 1. Ajouter la navigation clavier sur l'écran de recherche dory
@@ -39,6 +38,8 @@ Déplacer les taches faites dans ce menu
 
 ## DONE IHM
 Déplacer les taches faites dans ce menu
+1. Pointer les service REST sur le Server nodejs dory-server
+1. Intégrer earth-cruddy pour gérer la persistence  https://github.com/FiveElements/earth-cruddy
 
 ## Documentation
 

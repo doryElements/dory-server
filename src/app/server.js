@@ -51,6 +51,10 @@ app.use(responseTime());
 app.use(compress());
 app.use(koaBody());
 
+/**
+ * CSV Parser to use the first time you launch the server
+ */
+// const parser = require('./CSV-parse');
 
 
 // look ma, error propagation!
@@ -76,13 +80,11 @@ app.use((ctx, next) => {
 // const staticDirectory =serve(path.normalize('/project/DoryElements/dory-app'));
 // const staticDirectory = path.join(__dirname, '..', 'web');
 // const staticDirectory =  path.normalize(  __dirname+ '/../web');
-const staticDirectory =  path.normalize(   'c:/project/DoryElements/dory-app');
+const staticDirectory =  path.normalize(   'c:/project/dory-app');
 logger.info('Serve static file ', staticDirectory);
 const staticWeb =serve(staticDirectory);
 staticWeb.unless = unless;
 app.use(staticWeb.unless({path: ['/api']}));
-
-
 
 // Security
 app.use(encodeJwtTokenInHeadersCookies);

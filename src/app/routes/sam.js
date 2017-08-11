@@ -23,7 +23,7 @@ const Sam = require('../models/sam');
  */
 router.get('/', (ctx, next) => {
     const queryString = ctx.query;
-    return Sam.getByParams(queryString.app , queryString.fields,  queryString.size, queryString.from).then(result =>{
+    return Sam.getByParams(queryString.app, queryString.size, queryString.from).then(result =>{
         ctx.body = result;
         return result;
     });

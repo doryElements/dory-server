@@ -30,7 +30,7 @@ const schema = {
     "$id": "samSchema.json#",
     "$async": true,
     "properties": {
-        "name": {"type": "string", "minLength": 2}
+        "app": {"type": "string", "minLength": 2}
     }
 };
 
@@ -51,14 +51,13 @@ class SamModel extends ElasticModel {
         return response;
     }
 
-    getByParams(searchText = '', searchFields = ['app', 'tags'], size = 10, from = 0) {
+    getByParams(searchText = '', size = 10, from = 0) {
         const request = this.defaultOpt({
             body: {
                 'size': size,
                 'from': from,
                 'query': {
                     'simple_query_string': {
-                        'fields': searchFields,
                         'query': `${searchText}*`
                     }
                 }
