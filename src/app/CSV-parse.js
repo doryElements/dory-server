@@ -44,23 +44,18 @@ function mergeEnvs(list){
 
     list.forEach(function(element){
         let newApp = {};
-        let servers = [];
+        let serversDmz = [];
+        let serversLan = [];
         let urls = [];
         let bdds = [];
         let vips = [];
         let softwares = [];
 
         if(element['Serveur Web LAN']){
-            element['Serveur Web LAN'].split(/[\n,\/]+/).forEach(function(e){
-                "use strict";
-               servers.push('LAN - '+e);
-            });
+            serversLan = [...serversLan,...element['Serveur Web LAN'].split(/[\n,]+/)];
         }
         if(element['Serveur Web DMZ']){
-            element['Serveur Web DMZ'].split(/[\n,\/]+/).forEach(function(e){
-                "use strict";
-                servers.push('DMZ - '+e);
-            });
+            serversDmz = [...serversDmz,...element['Serveur Web DMZ'].split(/[\n,]+/)];
         }
 
         if(element['URL']){
@@ -98,7 +93,8 @@ function mergeEnvs(list){
             newEnv['urls']=urls;
             newEnv['bdds']=bdds;
             newEnv['vips']=vips;
-            newEnv['serveurs']=servers;
+            newEnv['serveursDmz']=serversDmz;
+            newEnv['serveursLan']=serversLan;
 
             mergedApps[mergedApps.length-1][element.Env.toLowerCase()] = newEnv;
         }
@@ -109,7 +105,8 @@ function mergeEnvs(list){
             newApp[element.Env.toLowerCase()]['urls'] = urls;
             newApp[element.Env.toLowerCase()]['bdds'] = bdds;
             newApp[element.Env.toLowerCase()]['vips'] = vips;
-            newApp[element.Env.toLowerCase()]['serveurs'] = servers;
+            newApp[element.Env.toLowerCase()]['serveursDmz'] = serversDmz;
+            newApp[element.Env.toLowerCase()]['serveursLan'] = serversLan;
             mergedApps.push(newApp);
         }
     });

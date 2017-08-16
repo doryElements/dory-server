@@ -29,6 +29,25 @@ router.get('/', (ctx, next) => {
     });
 });
 
+/**
+ * Get all servers
+ */
+router.get('/servers',(ctx,next)=>{
+    return Sam.getServers().then(result => {
+        ctx.body = result;
+        return result;
+    })
+});
+
+/**
+ * Get all databases
+ */
+router.get('/dbs',(ctx,next)=>{
+    return Sam.getDatabases().then(result => {
+        ctx.body = result;
+        return result;
+    })
+});
 
 /**
  * Get By Id
