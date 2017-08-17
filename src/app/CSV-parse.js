@@ -53,21 +53,41 @@ function mergeEnvs(list){
 
         if(element['Serveur Web LAN']){
             serversLan = [...serversLan,...element['Serveur Web LAN'].split(/[\n,]+/)];
+            serversLan = serversLan.map(function(element){
+               return element.trim();
+            });
+            serversLan = serversLan.filter(s=>s!='');
         }
         if(element['Serveur Web DMZ']){
             serversDmz = [...serversDmz,...element['Serveur Web DMZ'].split(/[\n,]+/)];
+            serversDmz = serversDmz.map(function(element){
+                return element.trim();
+            });
+            serversDmz = serversDmz.filter(s=>s!='');
         }
 
         if(element['URL']){
             urls = [...urls,...element['URL'].split(/[\n,]+/)];
+            urls = urls.map(function(element){
+                return element.trim();
+            });
+            urls = urls.filter(s=>s!='');
         }
 
         if(element['VIP']){
             vips = [...vips,...element['VIP'].split(/[\n,\/]+/)];
+            vips = vips.map(function(element){
+                return element.trim();
+            });
+            vips = vips.filter(s=>s!='');
         }
 
         if(element['Serveur DB']){
             bdds = [...bdds,...element['Serveur DB'].split(/[\n,\/]+/)];
+            bdds = bdds.map(function(element){
+                return element.trim();
+            });
+            bdds = bdds.filter(s=>s!='');
         }
 
         if(element['Version DB']){
