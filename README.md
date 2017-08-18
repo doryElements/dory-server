@@ -29,7 +29,6 @@ Déplacer les taches faites dans ce menu
 1. Renvoyer le token JWT dans un cookie (en service middleware, impact sur auth.js qui récupère le token)
 
 ## IHM
-1. Integration de dory-sam dans le projet dory-app (pour utiliser les patterns PRPL)
 1. Mise en place des écrans de logins
 1. IntégrerMise en place d'un custom style https://www.polymer-project.org/2.0/docs/devguide/style-shadow-dom#custom-style
 1. Travailler sur les le coté jolie de l'IHM d'édition
@@ -40,6 +39,8 @@ Déplacer les taches faites dans ce menu
 Déplacer les taches faites dans ce menu
 1. Pointer les service REST sur le Server nodejs dory-server
 1. Intégrer earth-cruddy pour gérer la persistence  https://github.com/FiveElements/earth-cruddy
+1. Integration de dory-sam dans le projet dory-app (pour utiliser les patterns PRPL)
+1. Création de nouveaux écrans pour afficher la liste des serveurs et des bases de données
 
 ## Documentation
 
