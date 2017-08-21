@@ -115,8 +115,7 @@ class ElasticModel {
 
 
     getById({id, version, secured}) {
-        return client.get(this.defaultOpt({id, version}, secured))
-            .then(this.adaptResponse);
+        return client.get(this.defaultOpt({id, version}, secured));
     }
 
     create(data) {

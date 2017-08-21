@@ -44,35 +44,50 @@ function mergeEnvs(list){
 
     list.forEach(function(element){
         let newApp = {};
-        let servers = [];
+        let serversDmz = [];
+        let serversLan = [];
         let urls = [];
         let bdds = [];
         let vips = [];
         let softwares = [];
 
         if(element['Serveur Web LAN']){
-            element['Serveur Web LAN'].split(/[\n,\/]+/).forEach(function(e){
-                "use strict";
-               servers.push('LAN - '+e);
+            serversLan = [...serversLan,...element['Serveur Web LAN'].split(/[\n,]+/)];
+            serversLan = serversLan.map(function(element){
+               return element.trim();
             });
+            serversLan = serversLan.filter(s=>s!='');
         }
         if(element['Serveur Web DMZ']){
-            element['Serveur Web DMZ'].split(/[\n,\/]+/).forEach(function(e){
-                "use strict";
-                servers.push('DMZ - '+e);
+            serversDmz = [...serversDmz,...element['Serveur Web DMZ'].split(/[\n,]+/)];
+            serversDmz = serversDmz.map(function(element){
+                return element.trim();
             });
+            serversDmz = serversDmz.filter(s=>s!='');
         }
 
         if(element['URL']){
             urls = [...urls,...element['URL'].split(/[\n,]+/)];
+            urls = urls.map(function(element){
+                return element.trim();
+            });
+            urls = urls.filter(s=>s!='');
         }
 
         if(element['VIP']){
             vips = [...vips,...element['VIP'].split(/[\n,\/]+/)];
+            vips = vips.map(function(element){
+                return element.trim();
+            });
+            vips = vips.filter(s=>s!='');
         }
 
         if(element['Serveur DB']){
             bdds = [...bdds,...element['Serveur DB'].split(/[\n,\/]+/)];
+            bdds = bdds.map(function(element){
+                return element.trim();
+            });
+            bdds = bdds.filter(s=>s!='');
         }
 
         if(element['Version DB']){
@@ -98,7 +113,8 @@ function mergeEnvs(list){
             newEnv['urls']=urls;
             newEnv['bdds']=bdds;
             newEnv['vips']=vips;
-            newEnv['serveurs']=servers;
+            newEnv['serveursDmz']=serversDmz;
+            newEnv['serveursLan']=serversLan;
 
             mergedApps[mergedApps.length-1][element.Env.toLowerCase()] = newEnv;
         }
@@ -109,7 +125,8 @@ function mergeEnvs(list){
             newApp[element.Env.toLowerCase()]['urls'] = urls;
             newApp[element.Env.toLowerCase()]['bdds'] = bdds;
             newApp[element.Env.toLowerCase()]['vips'] = vips;
-            newApp[element.Env.toLowerCase()]['serveurs'] = servers;
+            newApp[element.Env.toLowerCase()]['serveursDmz'] = serversDmz;
+            newApp[element.Env.toLowerCase()]['serveursLan'] = serversLan;
             mergedApps.push(newApp);
         }
     });
