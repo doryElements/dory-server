@@ -1,0 +1,38 @@
+version: '2'
+
+services:
+    nodejs:
+        image: node:latest
+        command: node /data/dory-server/src/app/server.js
+        ports:
+            - "8181:8181"
+        volumes:
+            - ./:/data/dory-server
+        networks:
+            - dory-network
+    elasticsearch:
+        image: docker.elastic.co/elasticsearch/elasticsearch:5.5.2
+        container_name: elasticsearch1
+        environment:
+          - cluster.name=dory-cluster
+          - bootstrap.memory_lock=true
+          - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+        ulimits:
+          memlock:
+            soft: -1
+            hard: -1
+        mem_limit: 1g
+        volumes:
+          - esdata1:/usr/share/elasticsearch/data
+        ports:
+          - 9200:9200
+        networks:
+            - dory-network
+
+volumes:
+  esdata1:
+    driver: local
+
+networks:
+    dory-network:
+        driver: bridge
