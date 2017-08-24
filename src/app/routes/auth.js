@@ -12,21 +12,15 @@ const auth = require('../security/auth');
 // Config
 const config = require('../config');
 
-// POST /login
-router.post('/login', auth.authenticateLocal() , (ctx, next) => {
-    const payload = ctx.state.user;
-    ctx.body ={
-        user: payload.context.user
-    };
-    ctx.redirect('/');
-});
-
-
 router.post('/tokens', auth.authenticateLocal() , (ctx, next) => {
     const payload = ctx.state.user;
     ctx.body ={
         user: payload.context.user
     };
+});
+
+router.get('/logout', (ctx, next) => {
+    ctx.cookies.set(config.jwt.cookieName,null);
 });
 
 module.exports = router;

@@ -79,6 +79,10 @@ class UserModel extends ElasticModel {
         return bcrypt.compare(plaintextPassword, hash)
             .then( isSame => isSame);
     }
+    // FIXME blacklist token
+    logout(){
+
+    }
 
 }
 const model = new UserModel();
