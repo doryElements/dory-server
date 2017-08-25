@@ -13,11 +13,11 @@ const mapping = {
     type: indexType,
     body: {
         properties: {
-            name: {
-                type: "text",
+            app: {
+                type: "string",
                 fields: {
                     untouched: {
-                        type: "text",
+                        type: "string",
                         index: "not_analyzed"
                     }
                 }
@@ -60,7 +60,10 @@ class SamModel extends ElasticModel {
                     'simple_query_string': {
                         'query': `${searchText}*`
                     }
-                }
+                },
+                'sort' : [
+                    {'app.untouched':{'order':'asc'}}
+                ]
             }
         });
 
@@ -108,7 +111,7 @@ class SamModel extends ElasticModel {
                         });
                     }
                 });
-                return dbs;
+                return dbs.sort();
             });
     }
 
@@ -182,7 +185,8 @@ class SamModel extends ElasticModel {
                     }
                 });
 
-                return {serversLan: LAN, serversDmz: DMZ};
+
+                return {serversLan: LAN.sort(), serversDmz: DMZ.sort()};
             });
     }
 
