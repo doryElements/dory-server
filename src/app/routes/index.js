@@ -16,6 +16,14 @@ const userRoute = require('./user');
 const profileRoute = require('./profile');
 const authRoute = require('./auth');
 
+// Dory Api Version
+router.get('/', (ctx, next) => {
+    ctx.body = {
+        name: 'Dory Server Api',
+        version: '1'
+    };
+});
+
 // Auth Routes
 router.use( authRoute.routes(), authRoute.allowedMethods());
 
