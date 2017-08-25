@@ -15,6 +15,7 @@ const samRoute = require('./sam');
 const userRoute = require('./user');
 const profileRoute = require('./profile');
 const authRoute = require('./auth');
+const adminRoute = require('./admin');
 
 // Dory Api Version
 router.get('/', (ctx, next) => {
@@ -24,8 +25,9 @@ router.get('/', (ctx, next) => {
     };
 });
 
-// Auth Routes
+// Unsecure Routes
 router.use( authRoute.routes(), authRoute.allowedMethods());
+router.use( adminRoute.routes(), adminRoute.allowedMethods()); // FIXME
 
 // Api Secured routes
 const securedRoutes = [samRoute, userRoute, profileRoute];
