@@ -10,7 +10,7 @@ const router = new Router({
 router.get('/',  (ctx,next) => {
     // console.log('req keys', Object.keys(req));
     // console.log('req authInfo',req.authInfo);
-    ctx.body ={message: 'ok', user: ctx.state.user, jwt: ctx.state.authInfo};
+    ctx.body ={message: 'ok', user: ctx.state.user.context.user, jwt: ctx.state.authInfo};
 });
 
 
