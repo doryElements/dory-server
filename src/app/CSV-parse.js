@@ -120,6 +120,7 @@ function mergeEnvs(list){
         }
         else{
             newApp.app = element.Application;
+            newApp.tags = [];
             newApp[element.Env.toLowerCase()] = {};
             newApp[element.Env.toLowerCase()]['softwares'] = softwares;
             newApp[element.Env.toLowerCase()]['urls'] = urls;
