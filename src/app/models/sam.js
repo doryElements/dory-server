@@ -111,7 +111,9 @@ class SamModel extends ElasticModel {
                         });
                     }
                 });
-                return dbs.sort();
+                return dbs.sort(function(a,b) {
+                    return a.toLowerCase().localeCompare(b.toLowerCase());
+                });
             });
     }
 
@@ -186,7 +188,14 @@ class SamModel extends ElasticModel {
                 });
 
 
-                return {serversLan: LAN.sort(), serversDmz: DMZ.sort()};
+                return {
+                    serversLan: LAN.sort(function(a,b) {
+                        return a.toLowerCase().localeCompare(b.toLowerCase());
+                    }),
+                    serversDmz: DMZ.sort(function(a,b) {
+                        return a.toLowerCase().localeCompare(b.toLowerCase());
+                    })
+                };
             });
     }
 
