@@ -12,6 +12,11 @@ npm run dev
 curl -H "Content-Type: application/json" -X POST -d '{"email":"john@mail.com","password": "john123"}'  http://localhost:8181/token
 ```
 
+## Change passowrd
+```
+CMD curl -XPUT -m 5 -u elastic:changeme 'http://localhost:9200/_xpack/security/user/elastic/_password' -H "Content-Type: application/json" -d '{ "password" : "myNewPwd" }
+```
+
 # TODO
 ## TODO Server 
 
