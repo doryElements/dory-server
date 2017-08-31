@@ -29,6 +29,7 @@ services:
         volumes:
             - ./:/data/dory-server
         networks:
+            - dory-backend-network
             - dory-network
     elasticsearch:
         build:
@@ -49,7 +50,7 @@ services:
         ports:
           - 9200:9200
         networks:
-            - dory-network
+            - dory-backend-network
 
 volumes:
   esdata1:
@@ -57,4 +58,6 @@ volumes:
 
 networks:
     dory-network:
+        driver: bridge
+    dory-backend-network:
         driver: bridge
