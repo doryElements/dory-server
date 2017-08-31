@@ -7,7 +7,7 @@ const configDory =  {
         cookieName : 'dory-session'
     },
     elasticsearch: {
-        host: 'localhost:9200',
+        host: 'es:9200',
         log: 'info',
         keepAlive: true
     },

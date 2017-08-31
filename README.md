@@ -88,4 +88,8 @@ $  openssl req -new -key server.key -out server.csr
 $ openssl x509 -req -sha256 -days 365 -in server.csr -signkey server.key -out server.crt
 ==> server.crt
 ```
+
+```bash
+sudo openssl dhparam -out src/certs/dhparam.pem 4096
+```
 * https://github.com/expressjs/express/issues/2364
