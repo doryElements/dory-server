@@ -21,6 +21,9 @@ router.post('/tokens', auth.authenticateLocal() , (ctx, next) => {
 
 router.get('/logout', (ctx, next) => {
     ctx.cookies.set(config.jwt.cookieName,null);
+    ctx.body ={
+        logout: true
+    };
 });
 
 module.exports = router;
