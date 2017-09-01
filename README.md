@@ -12,6 +12,11 @@ npm run dev
 curl -H "Content-Type: application/json" -X POST -d '{"email":"john@mail.com","password": "john123"}'  http://localhost:8181/token
 ```
 
+## Change passowrd
+```
+CMD curl -XPUT -m 5 -u elastic:changeme 'http://localhost:9200/_xpack/security/user/elastic/_password' -H "Content-Type: application/json" -d '{ "password" : "myNewPwd" }
+```
+
 # TODO
 ## TODO Server 
 
@@ -82,5 +87,9 @@ $  openssl req -new -key server.key -out server.csr
 
 $ openssl x509 -req -sha256 -days 365 -in server.csr -signkey server.key -out server.crt
 ==> server.crt
+```
+
+```bash
+sudo openssl dhparam -out src/certs/dhparam.pem 4096
 ```
 * https://github.com/expressjs/express/issues/2364

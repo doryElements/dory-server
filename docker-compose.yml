@@ -1,17 +1,40 @@
 version: '2'
 
 services:
+    nginx:
+        image: nginx:latest
+        ports:
+            - "80:80"
+            - "443:443"
+        depends_on:
+            - nodejs
+        links:
+            - "nodejs:doryapi"
+        volumes:
+            - ./src/certs:/etc/nginx/ssl
+            - ./config/nginx/nginx.conf:/etc/nginx/nginx.conf
+            - ./config/nginx/default.conf:/etc/nginx/conf.d/default.conf
+            - ../dory-app:/var/www/html
+        networks:
+            - dory-network
     nodejs:
         image: node:latest
         command: node /data/dory-server/src/app/server.js
         ports:
             - "8181:8181"
+        depends_on:
+            - elasticsearch
+        links:
+              - "elasticsearch:es"
         volumes:
             - ./:/data/dory-server
         networks:
+            - dory-backend-network
             - dory-network
     elasticsearch:
-        image: docker.elastic.co/elasticsearch/elasticsearch:5.5.2
+        build:
+          context: ./
+          dockerfile: Dockerfile-elasticsearch
         container_name: elasticsearch1
         environment:
           - cluster.name=dory-cluster
@@ -27,7 +50,7 @@ services:
         ports:
           - 9200:9200
         networks:
-            - dory-network
+            - dory-backend-network
 
 volumes:
   esdata1:
@@ -35,4 +58,6 @@ volumes:
 
 networks:
     dory-network:
+        driver: bridge
+    dory-backend-network:
         driver: bridge
