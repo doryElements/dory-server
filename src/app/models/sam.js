@@ -51,6 +51,27 @@ class SamModel extends ElasticModel {
         return response;
     }
 
+    adaptBody(body) {
+        body.app  = body.app.toUpperCase();
+
+        if(body.production){
+            body.production.serveursDmz = body.production.serveursDmz.map(function(s){return s.toUpperCase()});
+            body.production.serveursLan = body.production.serveursLan.map(function(s){return s.toUpperCase()});
+            body.production.bdds = body.production.bdds.map(function(s){return s.toUpperCase()});
+        }
+        if(body.recette){
+            body.recette.serveursDmz = body.recette.serveursDmz.map(function(s){return s.toUpperCase()});
+            body.recette.serveursLan = body.recette.serveursLan.map(function(s){return s.toUpperCase()});
+            body.recette.bdds = body.recette.bdds.map(function(s){return s.toUpperCase()});
+        }
+        if(body.qualif){
+            body.qualif.serveursDmz = body.qualif.serveursDmz.map(function(s){return s.toUpperCase()});
+            body.qualif.serveursLan = body.qualif.serveursLan.map(function(s){return s.toUpperCase()});
+            body.qualif.bdds = body.qualif.bdds.map(function(s){return s.toUpperCase()});
+        }
+        return body;
+    }
+
     getByParams(searchText = '', size = 10, from = 0) {
         const request = this.defaultOpt({
             body: {

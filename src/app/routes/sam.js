@@ -83,7 +83,7 @@ router.del('/:id', (ctx, next) => {
  */
 router.post('/',  (ctx, next) => {
     logger.debug('---------- state', ctx.state);
-    const body = ctx.request.body;
+    const body = Sam.adaptBody(ctx.request.body);
     return   Sam.create(body)
         .then(result => {
             ctx.body = result;
@@ -102,7 +102,7 @@ router.post('/',  (ctx, next) => {
 router.put('/:id', (ctx, next) => {
     const id = ctx.params.id;
     const version = ctx.query.version;
-    const body = ctx.request.body;
+    const body = Sam.adaptBody(ctx.request.body);
     return Sam.update(body, id, version)
         .then(result => {
             if (result.created) {

@@ -1,10 +1,11 @@
+const logger = require('./logger');
 const parse = require('csv-parse');
 const inputPath = './Cartographie_DITW_Applications_DITW.csv';
 const fs = require('fs');
 const fetch = require('node-fetch');
 let output = [];
 let apps = [];
-
+const Sam = require('./models/sam');
 
 fetch('http://localhost:9200/sam/sam/',{
     method : 'DELETE'
@@ -24,16 +25,17 @@ const parser = parse({delimiter: ';'}, function(err, data){
     let mergedApps = mergeEnvs(apps);
 
     mergedApps.forEach(function(app){
-        "use strict";
+        // "use strict";
+        logger.debug(app);
         fetch('http://localhost:9200/sam/sam',{
             headers:{
                 'Content-Type' : 'application/json'
             },
             method: 'POST',
-            body : JSON.stringify(app)
+            body : JSON.stringify(Sam.adaptBody(app))
         })
-            .then(function(res){return res.json();})
-            .then(function(res){console.log(res)});
+        .then(function(res){return res.json();})
+        .then(function(res){console.log(res)});
     });
 });
 
