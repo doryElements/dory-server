@@ -2,7 +2,7 @@ version: '2'
 
 services:
     nginx:
-        image: nginx:latest
+        image: nginx:alpine
         ports:
             - "80:80"
             - "443:443"
@@ -35,7 +35,6 @@ services:
         build:
           context: ./
           dockerfile: Dockerfile-elasticsearch
-        container_name: elasticsearch1
         environment:
           - cluster.name=dory-cluster
           - bootstrap.memory_lock=true

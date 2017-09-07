@@ -82,7 +82,6 @@ router.del('/:id', (ctx, next) => {
  * Create
  */
 router.post('/',  (ctx, next) => {
-    logger.debug('---------- state', ctx.state);
     const body = ctx.request.body;
     return   Sam.create(body)
         .then(result => {
