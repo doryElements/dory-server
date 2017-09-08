@@ -36,7 +36,7 @@ router.get('/servers',(ctx,next)=>{
     return Sam.getServers().then(result => {
         ctx.body = result;
         return result;
-    })
+    });
 });
 
 /**
@@ -46,7 +46,7 @@ router.get('/dbs',(ctx,next)=>{
     return Sam.getDatabases().then(result => {
         ctx.body = result;
         return result;
-    })
+    });
 });
 
 /**
@@ -82,7 +82,8 @@ router.del('/:id', (ctx, next) => {
  * Create
  */
 router.post('/',  (ctx, next) => {
-    const body = ctx.request.body;
+    logger.debug('---------- state', ctx.state);
+    const body = Sam.adaptBody(ctx.request.body);  // FIXME
     return   Sam.create(body)
         .then(result => {
             ctx.body = result;
@@ -101,7 +102,7 @@ router.post('/',  (ctx, next) => {
 router.put('/:id', (ctx, next) => {
     const id = ctx.params.id;
     const version = ctx.query.version;
-    const body = ctx.request.body;
+    const body = Sam.adaptBody(ctx.request.body);
     return Sam.update(body, id, version)
         .then(result => {
             if (result.created) {
