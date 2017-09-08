@@ -145,7 +145,7 @@ class SamModel extends ElasticModel {
                 response.hits.forEach(function(app){
                     names.push(app.app);
                 });
-                return names;
+                return names.sort();
             });
     }
 
