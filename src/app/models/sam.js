@@ -172,35 +172,30 @@ class SamModel extends ElasticModel {
     //     return {links:links,nodes:nodes};
     // }
 
-    // getRelatives(id,visited=[]){
-    //     let links = [];
-    //     let nodes = [];
-    //
-    //     return this.getById({id:id})
-    //         .then(result => {
-    //             let app = result._source;
-    //             if(app.relatives && app.relatives.length > 0){
-    //                 app.relatives.forEach((rel)=> {
-    //                     if(!visited.includes(rel)){
-    //                         nodes.push(rel);
-    //                         visited.push(rel);
-    //                         return this.getByName(rel)
-    //                             .then(app => {
-    //                                 return this.getRelatives(app.id,visited)
-    //                                     .then(next => {
-    //                                         Array.prototype.push.apply(nodes,next);
-    //                                         // logger.debug('next :', nodes);
-    //                                         // return nodes;
-    //                                     });
-    //                          });
-    //                     }
-    //                 });
-    //             }
-    //         })
-    //         .then(() => {
-    //             return nodes;
-    //         });
-    // }
+    getRelatives(id,nodes=[],links=[], visited=[]){
+        return this.getById({id:id}).then(app => {
+            return {relatives:app._source.relatives,app:app._source.app};
+        }).then(({relatives,app}) => {
+            return relatives.map( rel => {
+                if (!visited.includes(rel)) {
+                    nodes.push(rel);
+                    links.push({source:app,target:rel});
+                    visited.push(rel);
+                    return this.getByName(rel);
+                }
+                return undefined;
+            })
+        }).then(promises => Promise.all(promises)).then(relApps=> {
+            return relApps.map(relApp=> {
+                if (relApp) {
+                    return this.getRelatives(relApp.id,nodes,links, visited);
+                }
+            })
+        }).then(promises => Promise.all(promises)).then(results => {
+            return {nodes:nodes,links:links};
+       });
+    }
+
 
     getDatabases() {
         const request = this.defaultOpt({

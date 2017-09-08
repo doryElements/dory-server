@@ -62,13 +62,13 @@ router.get('/options',(ctx,next) => {
 /**
  * Get relations of an app
  */
-// router.get('/relatives/:id',(ctx,next) => {
-//     const id= ctx.params.id;
-//     return Sam.getRelatives(id).then(result => {
-//         ctx.body = result;
-//         return result;
-//     });
-// });
+router.get('/relatives/:id',(ctx,next) => {
+    const id= ctx.params.id;
+    return Sam.getRelatives(id).then(result => {
+        ctx.body = result;
+        return result;
+    });
+});
 
 /**
  * Get By Id
