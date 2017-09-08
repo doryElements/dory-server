@@ -183,6 +183,7 @@ class SamModel extends ElasticModel {
                     visited.push(rel);
                     return this.getByName(rel);
                 }
+                links.push({source:app,target:rel});
                 return undefined;
             })
         }).then(promises => Promise.all(promises)).then(relApps=> {
