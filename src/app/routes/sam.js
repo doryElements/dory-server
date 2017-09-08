@@ -47,7 +47,29 @@ router.get('/dbs',(ctx,next)=>{
         ctx.body = result;
         return result;
     });
+
 });
+
+/**
+ * Get app names for dropdown menu
+ */
+router.get('/options',(ctx,next) => {
+   return Sam.getNames().then(result => {
+       ctx.body = result;
+       return result;
+   });
+});
+
+/**
+ * Get relations of an app
+ */
+// router.get('/relatives/:id',(ctx,next) => {
+//     const id= ctx.params.id;
+//     return Sam.getRelatives(id).then(result => {
+//         ctx.body = result;
+//         return result;
+//     });
+// });
 
 /**
  * Get By Id
@@ -76,24 +98,52 @@ router.del('/:id', (ctx, next) => {
 });
 
 
-
-
 /**
  * Create
  */
 router.post('/',  (ctx, next) => {
     logger.debug('---------- state', ctx.state);
-    const body = Sam.adaptBody(ctx.request.body);  // FIXME
-    return   Sam.create(body)
-        .then(result => {
-            ctx.body = result;
-            if (result.created) {
-                delete result.created;
-                ctx.status = 201;
-            }
-            return result;
-        });
+    const body = Sam.adaptBody(ctx.request.body);
 
+    // if(Sam.appExists(body.app)){
+    //     ctx.body= {error:'App already exist'};
+    //     ctx.status= 422;
+    //     logger.debug('Trying to create an app already existing');
+    //     return ctx.body;
+    // }
+    // else{
+        return Sam.create(body)
+            .then(result => {
+                ctx.body = result;
+                if (result.created) {
+                    delete result.created;
+                    ctx.status = 201;
+                }
+                return result;
+            });
+    // }
+    //
+    // Sam.appExists(body.app)
+    //     .then(result => {
+    //         if(result){
+    //             ctx.body= {error:'App already exist'};
+    //             ctx.status= 422;
+    //             logger.debug('Trying to create an app already existing');
+    //             return ctx.body;
+    //         }
+    //         else{
+    //             logger.debug('Creating',body.app);
+    //             return Sam.create(body)
+    //                 .then(result => {
+    //                     ctx.body = result;
+    //                     if (result.created) {
+    //                         delete result.created;
+    //                         ctx.status = 201;
+    //                     }
+    //                     return result;
+    //                 });
+    //         }
+    //     });
 });
 
 /**
