@@ -115,7 +115,8 @@ class ElasticModel {
 
 
     getById({id, version, secured}) {
-        return client.get(this.defaultOpt({id, version}, secured));
+        return client.get(this.defaultOpt({id, version}, secured))
+            .then(response => this.adaptResponse(response));
     }
 
     create(data) {
@@ -130,18 +131,18 @@ class ElasticModel {
                 let request = id ? Object.assign({body}, {id}) : {body};
                 request = version ? Object.assign({request}, {version}) : request;
                 return request;
-            }).then(request => client.index(this.defaultOpt(request)))
+            }).then(request => client.index(this.defaultOpt(request, true)))
             .then(this.adaptResponse);
     }
 
     update(data, id, version) {
         return this.validate(data)
-            .then(body => client.index(this.defaultOpt({id, version, body})))
+            .then(body => client.index(this.defaultOpt({id, version, body}, true)))
             .then(this.adaptResponse);
     }
 
     delete(id, version) {
-        return client.delete(this.defaultOpt({id, version}))
+        return client.delete(this.defaultOpt({id, version}, true))
             .then(this.adaptResponse);
     }
 

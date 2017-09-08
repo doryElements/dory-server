@@ -7,22 +7,38 @@ const router = new Router({
 });
 
 const User = require('../models/user');
-const userData = require('../userData').users;
+const crudRouter = require('./crudRouter')(User);
 
-router.get('/',  (ctx, next) => {
-    // console.log('req keys', Object.keys(req));
-    // console.log('req authInfo',req.authInfo);
-    ctx.body ={message: 'ok', user: ctx.user, jwt: ctx.authInfo};
+
+/**
+ * Search User
+ */
+router.get('/', (ctx, next) => {
+    const queryString = ctx.query;
+    return User.searchUserByText(queryString.search, queryString.size, queryString.from).then(result =>{
+        ctx.body = result;
+        return result;
+    });
 });
 
-
-
+/**
+ * Change password
+ */
 router.put('/:id/password', (ctx, next) => {
     const password = 'coucou';
+    const body = ctx.request.body;
     return User.hashPasswordPromise(password).then(hash=> {
         ctx.body ={message: 'TODO change password', password, hash};
         return hash;
     });
 });
+
+
+
+/**
+ * Crud User
+ */
+router.use(crudRouter.routes());
+
 
 module.exports = router;

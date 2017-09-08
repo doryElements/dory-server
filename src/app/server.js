@@ -54,7 +54,7 @@ app.use(koaBody());
 /**
  * CSV Parser to use the first time you launch the server
  */
-// const parser = require('./CSV-parse');
+// const parser = require('./CSV-parse'
 
 
 // look ma, error propagation!
@@ -104,4 +104,7 @@ const certs = {
 require('events').EventEmitter.defaultMaxListeners = 0;
 http2.createServer(certs, app.callback()).listen(port, () => {
     logger.info('Magic  happens at https://localhost:' + port);
+});
+app.listen(8080, () => {
+    logger.info('Magic  happens at http://localhost:' + port);
 });
