@@ -173,8 +173,8 @@ class SamModel extends ElasticModel {
     // }
 
     getRelatives(id,nodes=[],links=[], visited=[]){
-        return this.getById({id:id}).then(app => {
-            return {relatives:app._source.relatives,app:app._source.app};
+       return this.getById({id:id}).then(app => {
+            return {relatives:app.relatives,app:app.app};
         }).then(({relatives,app}) => {
             return relatives.map( rel => {
                 if (!visited.includes(rel)) {
@@ -192,6 +192,9 @@ class SamModel extends ElasticModel {
                 }
             })
         }).then(promises => Promise.all(promises)).then(results => {
+            if (results && results.length>0) {
+               // Array.prototype.push.apply(nodes,results);
+            }
             return {nodes:nodes,links:links};
        });
     }
