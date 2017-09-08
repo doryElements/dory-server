@@ -72,7 +72,40 @@ class SamModel extends ElasticModel {
         return body;
     }
 
+    appExists(app) {
+        return this.getByParams(app)
+            .then(result =>{
+                let res = false;
+                result.hits.forEach(function(e){
+                    if(app === e.app){
+                        res = true;
+                    }
+                });
+                return res;
+            });
+    }
+
+    getByName(name) {
+        let res = '';
+        return this.getByParams(name)
+            .then(result => {
+                result.hits.forEach(hit => {
+                    if(hit.app === name){
+                        res =  hit;
+                    }
+                });
+                return res;
+            })
+    }
+
     getByParams(searchText = '', size = 10, from = 0) {
+        //Workaround to escape special characters
+        //Need to be adapted to work when there are several - (or other special characters)
+        if(searchText.includes('-')){
+            let split = searchText.split('-');
+            searchText = `${split[0]} \- ${split[1]}`;
+            logger.debug('search',searchText);
+        }
         const request = this.defaultOpt({
             body: {
                 'size': size,
@@ -91,6 +124,83 @@ class SamModel extends ElasticModel {
         return client.search(request)
             .then(result => this.adaptSearchResponse(result,size, from));
     }
+
+    getNames() {
+        const request = this.defaultOpt({
+            body: {
+                'size':1000,
+                'query': {
+                    'match_all': {}
+                }
+            }
+        });
+        return client.search(request)
+            .then(result => {
+                const hits = result.hits;
+                const response = {
+                    total: hits.total,
+                    hits: hits.hits.map(line => this.adaptResponse(line))
+                };
+                let names = [];
+                response.hits.forEach(function(app){
+                    names.push(app.app);
+                });
+                return names;
+            });
+    }
+
+    // TODO : Complete
+    // getRelatives(id,visited=[]) {
+    //     const app = this.getById({id:id});
+    //     let links = [];
+    //     let nodes = [];
+    //
+    //     if(app.relatives){
+    //         app.relatives.forEach(function(rel){
+    //             if(!visited.includes(rel)){
+    //                 nodes.push({'name':rel,'color':'#FFCC80','icon':'tab'});
+    //                 links.push({'source':app.app,'target':rel});
+    //                 let relId = this.getByParams(rel);
+    //                 let next = this.getRelatives(relId);
+    //                 nodes.push(next.nodes);
+    //                 links.push(next.nodes);
+    //                 visited.push(rel);
+    //             }
+    //         });
+    //     }
+    //
+    //     return {links:links,nodes:nodes};
+    // }
+
+    // getRelatives(id,visited=[]){
+    //     let links = [];
+    //     let nodes = [];
+    //
+    //     return this.getById({id:id})
+    //         .then(result => {
+    //             let app = result._source;
+    //             if(app.relatives && app.relatives.length > 0){
+    //                 app.relatives.forEach((rel)=> {
+    //                     if(!visited.includes(rel)){
+    //                         nodes.push(rel);
+    //                         visited.push(rel);
+    //                         return this.getByName(rel)
+    //                             .then(app => {
+    //                                 return this.getRelatives(app.id,visited)
+    //                                     .then(next => {
+    //                                         Array.prototype.push.apply(nodes,next);
+    //                                         // logger.debug('next :', nodes);
+    //                                         // return nodes;
+    //                                     });
+    //                          });
+    //                     }
+    //                 });
+    //             }
+    //         })
+    //         .then(() => {
+    //             return nodes;
+    //         });
+    // }
 
     getDatabases() {
         const request = this.defaultOpt({
