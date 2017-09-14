@@ -6,6 +6,19 @@ const Router = require('koa-router');
 function crudRouter(Model) {
 
     const router = new Router();
+
+    /**
+     * Validate
+     */
+    router.post('/validate', (ctx, next) => {
+        const body = ctx.request.body;
+        return Model.validate(body).then(result => {
+            ctx.body = result;
+            return result;
+        });
+
+    });
+
     /**
      * Get By Id
      */
@@ -68,6 +81,9 @@ function crudRouter(Model) {
                 return result;
             });
     });
+
+
+
 
     return router;
 }

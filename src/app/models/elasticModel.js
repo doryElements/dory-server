@@ -3,8 +3,12 @@ const client = require('./elasticClient');
 //Validator
 // const setupAsync = require('ajv-async');
 const localize = require('ajv-i18n');
+
+// Validation
 const Ajv = require('ajv');
-const ajv = new Ajv({allErrors: true, jsonPointers: false}); // options can be passed, e.g. {allErrors: true}
+const setupAsync = require('ajv-async');
+const ajv = setupAsync(new Ajv({allErrors: true, jsonPointers: false})); // options can be passed, e.g. {allErrors: true}
+
 
 const ValidationError = require('../errors/validationError');
 
@@ -36,9 +40,12 @@ class ElasticModel {
             if (!schema.$async) {
                 schema.$async = true;
             }
+            this.registerValidators(ajv);
             this.validator = ajv.compile(schema);
         }
     }
+
+    registerValidators(ajv) { return ajv; }
 
     validate(data) {
         // logger.debug('request validate', data);

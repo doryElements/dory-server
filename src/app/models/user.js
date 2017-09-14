@@ -4,7 +4,6 @@ const ElasticModel = require('./elasticModel');
 const bcrypt = require('bcryptjs');
 
 
-
 // Config
 const saltRounds = 13;
 const indexName = 'users';
@@ -36,13 +35,20 @@ const mapping = {
         }
     }
 };
+// Validator Keyword
+// ajv.addKeyword('emailExists', {
+//     async: true,
+//     type: 'string',
+//     validate: checkIdExists
+// });
 
+// Schema validator
 const schema = {
     "$id": "userSchema.json#",
     "$async": true,
     "properties": {
         "name": {"type": "string", "minLength": 2},
-        "email": {"type": "string", "format": "email"}
+        "email": {"type": "string", "format": "email", "checkEmailExists": { "$data": "$id", "items": { "$ref": "$id" }} }
     }
 };
 
@@ -60,6 +66,10 @@ class UserModel extends ElasticModel {
         return option;
     }
 
+    registerValidators(ajv) {
+        ajv.addKeyword('checkEmailExists', { async: true, type: 'string', validate: this.checkEmailExists.bind(this) });
+        return ajv;
+    }
 
     adaptSearchResponse(result,size, from) {
         const hits = result.hits;
@@ -70,6 +80,18 @@ class UserModel extends ElasticModel {
             hits: hits.hits.map(line => this.adaptResponse(line))
         };
         return response;
+    }
+
+    checkEmailExists(schema, data, rules, field, model) {
+        // TODO Exclude Data id in result ? model.id
+        logger.info('schema',  field );
+        const request =this.defaultOpt({q: 'email:'+data}, false);
+        return this.client.search(request).then(response => {
+            const total = response.hits.total;
+            return true; // FIXME
+            logger.debug('--validate email', response, total,'=', (!!total));
+            return !!total; // true if record is found
+        });
     }
 
     getByEmail({email, secured}) {

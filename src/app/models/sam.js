@@ -2,7 +2,7 @@
 const logger = require('../logger');
 const ElasticModel = require('./elasticModel');
 const client = require('./elasticClient');
-const Ajv = require('ajv');
+
 
 
 const indexName = 'sam';
