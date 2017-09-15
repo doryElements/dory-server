@@ -48,7 +48,7 @@ const schema = {
     "$async": true,
     "properties": {
         "name": {"type": "string", "minLength": 2},
-        "email": {"type": "string", "format": "email", "checkEmailExists": { "$data": "$id", "items": { "$ref": "$id" }} }
+        "email": {"type": "string", "format": "email", "checkEmailExists": { }}
     }
 };
 
@@ -58,25 +58,26 @@ class UserModel extends ElasticModel {
     constructor() {
         super({indexName, indexType, mapping, schema});
     }
+
     defaultOpt(opt, displaySecured) {
-        let option =super.defaultOpt(opt, displaySecured);
+        let option = super.defaultOpt(opt, displaySecured);
         if (!displaySecured) {
-           option= Object.assign(option, {_source_exclude: 'secured'})
+            option = Object.assign(option, {_source_exclude: 'secured'})
         }
         return option;
     }
 
     registerValidators(ajv) {
-        ajv.addKeyword('checkEmailExists', { async: true, type: 'string', validate: this.checkEmailExists.bind(this) });
+        ajv.addKeyword('checkEmailExists', {async: true, type: 'string', validate: this.checkEmailExists.bind(this)});
         return ajv;
     }
 
-    adaptSearchResponse(result,size, from) {
+    adaptSearchResponse(result, size, from) {
         const hits = result.hits;
         const response = {
             total: hits.total,
-            size:size,
-            from:from,
+            size: size,
+            from: from,
             hits: hits.hits.map(line => this.adaptResponse(line))
         };
         return response;
@@ -84,18 +85,42 @@ class UserModel extends ElasticModel {
 
     checkEmailExists(schema, data, rules, field, model) {
         // TODO Exclude Data id in result ? model.id
-        logger.info('schema',  field );
-        const request =this.defaultOpt({q: 'email:'+data}, false);
+        logger.info('schema', field);
+        const querySearchEmail = {
+            'body': {
+                'query': {
+                    'constant_score': {
+                        'filter': {
+                            'bool' : {
+                                'should' : { 'term': {'email': data}},
+                                "must_not" :  { 'term': {'_id': model.id}}
+                            }
+                        }
+                    }
+                }
+            }
+        };
+        const request = this.defaultOpt(querySearchEmail, false);
         return this.client.search(request).then(response => {
             const total = response.hits.total;
-            return true; // FIXME
-            logger.debug('--validate email', response, total,'=', (!!total));
-            return !!total; // true if record is found
+            // logger.debug('--validate email', response.hits.hits, total, '=!=', model.id);
+            return !total; // true if record is found
         });
     }
 
     getByEmail({email, secured}) {
-        const request =this.defaultOpt({q: 'email:'+email}, secured);
+        const querySearchEmail = {
+            'body': {
+                'query': {
+                    'constant_score': {
+                        'filter': {
+                            'term': {'email': email}
+                        }
+                    }
+                }
+            }
+        };
+        const request = this.defaultOpt(querySearchEmail, secured);
         return this.client.search(request)
             .then(this.validateOne.bind(this));
     }
@@ -111,19 +136,20 @@ class UserModel extends ElasticModel {
                     }
                 }
             }
-        } );
+        });
 
         return this.client.search(request)
-            .then(result => this.adaptSearchResponse(result,size, from));
+            .then(result => this.adaptSearchResponse(result, size, from));
     }
 
-    validatePassword(cypherPassword, password)  {
+    validatePassword(cypherPassword, password) {
         return cypherPassword === password;
     }
 
     hashPassword(plaintextPassword) {
         return bcrypt.hashSync(plaintextPassword, saltRounds);
     }
+
     comparePassword(plaintextPassword, hash) {
         return bcrypt.compareSync(plaintextPassword, hash);
     }
@@ -132,19 +158,21 @@ class UserModel extends ElasticModel {
         return bcrypt.hash(plaintextPassword, saltRounds)
             .then(hash => hash);
     }
+
     comparePasswordPromise(plaintextPassword, hash) {
         return bcrypt.compare(plaintextPassword, hash)
-            .then( isSame => isSame);
+            .then(isSame => isSame);
     }
+
     // FIXME blacklist token
-    logout(){
+    logout() {
 
     }
 
 }
+
 const model = new UserModel();
 
 
-
-module.exports=model;
+module.exports = model;
 
