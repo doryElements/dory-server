@@ -48,7 +48,7 @@ const schema = {
     "$async": true,
     "properties": {
         "name": {"type": "string", "minLength": 2},
-        "email": {"type": "string", "format": "email", "checkEmailExists": { }}
+        "email": {"type": "string", "format": "email", "checkFieldNotExists": {field: 'email'}}
     }
 };
 
@@ -68,7 +68,11 @@ class UserModel extends ElasticModel {
     }
 
     registerValidators(ajv) {
-        ajv.addKeyword('checkEmailExists', {async: true, type: 'string', validate: this.checkEmailExists.bind(this)});
+        ajv.addKeyword('checkFieldNotExists', {
+            async: true,
+            type: 'string',
+            validate: this.checkFieldNotExists.bind(this)
+        });
         return ajv;
     }
 
@@ -83,28 +87,25 @@ class UserModel extends ElasticModel {
         return response;
     }
 
-    checkEmailExists(schema, data, rules, field, model) {
-        // TODO Exclude Data id in result ? model.id
-        logger.info('schema', field);
-        const querySearchEmail = {
+    checkFieldNotExists(schema, data, rules, field, model) {
+        const querySearchField = {
             'body': {
                 'query': {
                     'constant_score': {
                         'filter': {
-                            'bool' : {
-                                'should' : { 'term': {'email': data}},
-                                "must_not" :  { 'term': {'_id': model.id}}
+                            'bool': {
+                                'should': {'term': {[schema.field]: data}},
+                                "must_not": {'term': {'_id': model.id}}
                             }
                         }
                     }
                 }
             }
         };
-        const request = this.defaultOpt(querySearchEmail, false);
+        const request = this.defaultOpt(querySearchField, false);
         return this.client.search(request).then(response => {
             const total = response.hits.total;
-            // logger.debug('--validate email', response.hits.hits, total, '=!=', model.id);
-            return !total; // true if record is found
+            return !total;
         });
     }
 
