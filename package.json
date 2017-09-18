@@ -8,9 +8,20 @@
     "dev": "nodemon -w src src/app/server.js",
     "dev-install": "npm install -g nodemon",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "esExportUsers": "./node_modules/.bin/elasticdump --input=http://localhost:9200/users --output=./data/users.json --type=data",
-    "esExportSams": "./node_modules/.bin/elasticdump --input=http://localhost:9200/sam --output=./data/sams.json --type=data",
-    "esImportUsers": "./node_modules/.bin/elasticdump --output=http://localhost:9200/users --input=./data/users.json --type=data"
+    "esExport": "npm run esExportUsers && npm run esExportSams",
+    "esExportUsers": "npm run esExportUsersMapping && npm run esExportUsersData",
+    "esExportUsersMapping": "./node_modules/.bin/elasticdump --input=http://localhost:9200/users --output=./data/users-mapping.json --type=mapping",
+    "esExportUsersData": "./node_modules/.bin/elasticdump --input=http://localhost:9200/users --output=./data/users-data.json --type=data",
+    "esExportSams": "npm run esExportSamsMapping && npm run esExportSamsData",
+    "esExportSamsMapping": "./node_modules/.bin/elasticdump --input=http://localhost:9200/sam --output=./data/sams-mapping.json --type=mapping",
+    "esExportSamsData": "./node_modules/.bin/elasticdump --input=http://localhost:9200/sam --output=./data/sams-data.json --type=data",
+    "esImport": "npm run esImportUsers && npm run esImportSams",
+    "esImportUsers": "npm run esImportUsersMapping && npm run esImportUsersData",
+    "esImportUsersMapping": "./node_modules/.bin/elasticdump --output=http://localhost:9200/users --input=./data/users-mapping.json --type=mapping",
+    "esImportUsersData": "./node_modules/.bin/elasticdump --output=http://localhost:9200/users --input=./data/users-data.json --type=data",
+    "esImportSams": "npm run esImportSamsMapping && npm run esImportSamsData",
+    "esImportSamsMapping": "./node_modules/.bin/elasticdump --output=http://localhost:9200/sam --input=./data/sams-mapping.json --type=mapping",
+    "esImportSamsData": "./node_modules/.bin/elasticdump --output=http://localhost:9200/sam --input=./data/sams-data.json --type=data"
   },
   "repository": {
     "type": "git",
