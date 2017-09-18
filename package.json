@@ -7,7 +7,10 @@
     "run": "node src/server.js",
     "dev": "nodemon -w src src/app/server.js",
     "dev-install": "npm install -g nodemon",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "esExportUsers": "./node_modules/.bin/elasticdump --input=http://localhost:9200/users --output=./data/users.json --type=data",
+    "esExportSams": "./node_modules/.bin/elasticdump --input=http://localhost:9200/sam --output=./data/sams.json --type=data",
+    "esImportUsers": "./node_modules/.bin/elasticdump --output=http://localhost:9200/users --input=./data/users.json --type=data"
   },
   "repository": {
     "type": "git",
@@ -54,6 +57,7 @@
     "winston-daily-rotate-file": "^1.4.6"
   },
   "devDependencies": {
+    "elasticdump": "^3.3.1",
     "nodemon": "^1.11.0"
   }
 }
