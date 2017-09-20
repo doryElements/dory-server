@@ -178,7 +178,7 @@ class UserModel extends ElasticModel {
                 }
             };
             return this.client.update(this.defaultOpt(request, true))
-        });
+        }).then(this.adaptResponse);
     }
 
     // FIXME blacklist token
