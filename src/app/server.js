@@ -105,6 +105,6 @@ require('events').EventEmitter.defaultMaxListeners = 0;
 http2.createServer(certs, app.callback()).listen(port, () => {
     logger.info('Magic  happens at https://localhost:' + port);
 });
-app.listen(8080, () => {
-    logger.info('Magic  happens at http://localhost:' + port);
-});
+// app.listen(8080, () => {
+//     logger.info('Magic  happens at http://localhost:' + 8080);
+// });

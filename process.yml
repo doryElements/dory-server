@@ -1,0 +1,6 @@
+apps:
+  - script   : src/app/server.js
+    instances: 0
+    exec_mode: cluster
+    env_production:
+      NODE_ENV: production

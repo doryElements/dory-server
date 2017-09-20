@@ -4,9 +4,10 @@
   "description": "Dory Server back end",
   "main": "src/server.js",
   "scripts": {
-    "run": "node src/server.js",
+    "start": "pm2 start process.yml",
+    "stop": "pm2 stop process.yml",
     "dev": "nodemon -w src src/app/server.js",
-    "dev-install": "npm install -g nodemon",
+    "dev-install": "npm install -g nodemon pnmap -sT -O localhostm2",
     "test": "echo \"Error: no test specified\" && exit 1",
     "esExport": "npm run esExportUsers && npm run esExportSams",
     "esExportUsers": "npm run esExportUsersMapping && npm run esExportUsersData",
