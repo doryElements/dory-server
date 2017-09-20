@@ -181,6 +181,12 @@ class UserModel extends ElasticModel {
         }).then(this.adaptResponse);
     }
 
+    // checkPassword(id, plaintextPassword) {
+    //     return client.get(this.defaultOpt({id, version}, secured)).then(result => {
+    //
+    //     })
+    // }
+
     // FIXME blacklist token
     logout() {
 
