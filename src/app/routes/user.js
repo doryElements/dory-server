@@ -21,17 +21,7 @@ router.get('/', (ctx, next) => {
     });
 });
 
-/**
- * Change password
- */
-router.put('/:id/password', (ctx, next) => {
-    const password = 'coucou';
-    const body = ctx.request.body;
-    return User.hashPasswordPromise(password).then(hash=> {
-        ctx.body ={message: 'TODO change password', password, hash};
-        return hash;
-    });
-});
+
 
 
 
