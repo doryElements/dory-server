@@ -5,7 +5,8 @@ const Router = require('koa-router');
 const router = new Router({
     prefix: '/profiles'
 });
-// const User = require('../models/users');
+
+const User = require('../models/user');
 
 router.get('/',  (ctx,next) => {
     // console.log('req keys', Object.keys(req));
@@ -13,6 +14,21 @@ router.get('/',  (ctx,next) => {
     ctx.body ={message: 'ok', user: ctx.state.user.context.user, jwt: ctx.state.authInfo};
 });
 
+/**
+ * Change password
+ */
+router.put('/password', (ctx, next) => {
 
+    const user = ctx.state.user;
+    const userId = user.sub;
+
+    const body = ctx.request.body;
+    const password = body.password;
+    console.log('Current user',userId);
+    return User.changePassword(userId, password).then(result=> {
+        ctx.body ={response: result };
+        return result;
+    });
+});
 
 module.exports = router;
