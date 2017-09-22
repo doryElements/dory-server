@@ -39,7 +39,7 @@ function strategyValidateUsernamePassword(username, password, done) {
             const payload = jwtSecurity.createTokenPayload(user);
             return done(null, payload);
         }).catch((err) => {
-        logger.warn('Login Error', err.message);
+        logger.debug('Login Error', err.message);
         return done(null, false, {message: err.message});
     });
 };
@@ -52,7 +52,7 @@ module.exports = {
         return passport.initialize();
     },
     authenticateLocal: () => {
-        return passport.authenticate('local', {session: false});
+        return passport.authenticate('local', {session: false, failWithError: true});
     },
 
 };

@@ -45,8 +45,8 @@ class ElasticModel {
     }
 
     registerValidators(ajv) {
- return ajv;
-}
+        return ajv;
+    }
 
     validate(data) {
         // logger.debug('request validate', data);
@@ -116,6 +116,8 @@ class ElasticModel {
         // logger.debug("validateOne", result);
         if (result.total === 1) {
             return this.adaptResponse(result.hits[0]);
+        } else if (result.total < 1) {
+            return Promise.reject(new Error('No result'));
         } else {
             return Promise.reject(new Error('Too much result'));
         }
@@ -138,7 +140,6 @@ class ElasticModel {
             .then((body) => { // Prepare request
                 let request = id ? Object.assign({body}, {id}) : {body};
                 request = version ? Object.assign({request}, {version}) : request;
-                logger.info('create request :', request);
                 return request;
             }).then((request) => client.index(this.defaultOpt(request, true)))
             .then(this.adaptResponse);
@@ -156,4 +157,5 @@ class ElasticModel {
     }
 }
 
-module.exports = ElasticModel;
+module
+    .exports = ElasticModel;

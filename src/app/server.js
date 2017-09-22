@@ -42,6 +42,10 @@ const env = process.env.NODE_ENV || 'development';
 const port = process.env.PORT || 8181;
 
 
+// Config NodesJs
+events.EventEmitter.defaultMaxListeners = 0;
+
+
 /**
  * Koa Server.
  */
@@ -75,11 +79,7 @@ app.use((ctx, next) => {
 // app.use(conditional());
 // app.use(etag());
 
-// serve staticfiles from ./public
-// const staticDirectory =serve(path.normalize('C:\\project\\DoryElements\\dory-app'));
-// const staticDirectory =serve(path.normalize('/project/DoryElements/dory-app'));
-// const staticDirectory = path.join(__dirname, '..', 'web');
-// const staticDirectory =  path.normalize(  __dirname+ '/../web');
+// serve staticfiles
  const staticDirectory =  path.normalize( config.web.folder);
 logger.info('Serve static file ', staticDirectory, path.resolve(staticDirectory));
 const staticWeb =serve(staticDirectory);
@@ -102,8 +102,6 @@ const certs = {
     cert: fs.readFileSync(path.join(certsDirectory, 'server.crt'))
 };
 
-// Config NodesJs
-events.EventEmitter.defaultMaxListeners = 0;
 
 // Start Listeners
 http2.createServer(certs, app.callback()).listen(port, () => {
