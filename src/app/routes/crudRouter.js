@@ -2,9 +2,7 @@ const logger = require('../logger');
 const Router = require('koa-router');
 
 
-
 function crudRouter(Model) {
-
     const router = new Router();
 
     /**
@@ -12,11 +10,10 @@ function crudRouter(Model) {
      */
     router.post('/validate', (ctx, next) => {
         const body = ctx.request.body;
-        return Model.validate(body).then(result => {
+        return Model.validate(body).then((result) => {
             ctx.body = result;
             return result;
         });
-
     });
 
     /**
@@ -25,7 +22,7 @@ function crudRouter(Model) {
     router.get('/:id', (ctx, next) => {
         const id = ctx.params.id;
         const version = ctx.query.version;
-        return Model.getById({id, version}).then(result => {
+        return Model.getById({id, version}).then((result) => {
             ctx.body = result;
             return result;
         });
@@ -37,23 +34,20 @@ function crudRouter(Model) {
     router.del('/:id', (ctx, next) => {
         const id = ctx.params.id;
         const version = ctx.query.version;
-        return Model.delete(id, version).then(result => {
+        return Model.delete(id, version).then((result) => {
             ctx.body = {message: 'delete', result};
             return result;
         });
-
     });
-
-
 
 
     /**
      * Create
      */
-    router.post('/',  (ctx, next) => {
+    router.post('/', (ctx, next) => {
         const body = ctx.request.body;
-        return   Model.create(body)
-            .then(result => {
+        return Model.create(body)
+            .then((result) => {
                 ctx.body = result;
                 if (result.created) {
                     delete result.created;
@@ -61,7 +55,6 @@ function crudRouter(Model) {
                 }
                 return result;
             });
-
     });
 
     /**
@@ -72,7 +65,7 @@ function crudRouter(Model) {
         const version = ctx.query.version;
         const body = ctx.request.body;
         return Model.update(body, id, version)
-            .then(result => {
+            .then((result) => {
                 if (result.created) {
                     delete result.created;
                     ctx.status = 201;
@@ -83,11 +76,8 @@ function crudRouter(Model) {
     });
 
 
-
-
     return router;
 }
-
 
 
 module.exports = crudRouter;

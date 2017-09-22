@@ -30,14 +30,14 @@ function LogClass(config) {
             type: parts[2] || '',
             response: status,
             queryString: parts[parts.length - 1],
-            queryBody: body || ''
+            queryBody: body || '',
         };
         if (status !== 200) {
             meta.responseBody = res;
             log.trace('[ELASTICSEARCH] ' + method + ' @ ', meta);
         }
     };
-    this.close =  () => {};
+    this.close = () => {};
 }
 
 function getClientSettings(options) {

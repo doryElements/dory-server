@@ -1,3 +1,4 @@
+/* eslint-disable require-jsdoc */
 // Logger
 const logger = require('../logger');
 const ElasticModel = require('./elasticModel');
@@ -15,25 +16,25 @@ const mapping = {
     body: {
         properties: {
             name: {
-                type: "text",
+                type: 'text',
                 fields: {
                     untouched: {
-                        type: "text",
-                        index: "not_analyzed"
-                    }
-                }
+                        type: 'text',
+                        index: 'not_analyzed',
+                    },
+                },
             },
-            email: {type: "string", index: "not_analyzed"},
+            email: {type: 'string', index: 'not_analyzed'},
             secured: {
                 properties: {
                     password: {
-                        type: "string",
-                        index: "not_analyzed"
+                        type: 'string',
+                        index: 'not_analyzed',
                     },
-                }
-            }
-        }
-    }
+                },
+            },
+        },
+    },
 };
 // Validator Keyword
 // ajv.addKeyword('emailExists', {
@@ -44,17 +45,16 @@ const mapping = {
 
 // Schema validator
 const schema = {
-    "$id": "userSchema.json#",
-    "$async": true,
-    "properties": {
-        "name": {"type": "string", "minLength": 2},
-        "email": {"type": "string", "format": "email", "checkFieldNotExists": {field: 'email'}}
-    }
+    '$id': 'userSchema.json#',
+    '$async': true,
+    'properties': {
+        'name': {'type': 'string', 'minLength': 2},
+        'email': {'type': 'string', 'format': 'email', 'checkFieldNotExists': {field: 'email'}},
+    },
 };
 
 
 class UserModel extends ElasticModel {
-
     constructor() {
         super({indexName, indexType, mapping, schema});
     }
@@ -62,7 +62,7 @@ class UserModel extends ElasticModel {
     defaultOpt(opt, displaySecured) {
         let option = super.defaultOpt(opt, displaySecured);
         if (!displaySecured) {
-            option = Object.assign(option, {_source_exclude: 'secured'})
+            option = Object.assign(option, {_source_exclude: 'secured'});
         }
         return option;
     }
@@ -71,7 +71,7 @@ class UserModel extends ElasticModel {
         ajv.addKeyword('checkFieldNotExists', {
             async: true,
             type: 'string',
-            validate: this.checkFieldNotExists.bind(this)
+            validate: this.checkFieldNotExists.bind(this),
         });
         return ajv;
     }
@@ -82,7 +82,7 @@ class UserModel extends ElasticModel {
             total: hits.total,
             size: size,
             from: from,
-            hits: hits.hits.map(line => this.adaptResponse(line))
+            hits: hits.hits.map((line) => this.adaptResponse(line)),
         };
         return response;
     }
@@ -95,15 +95,15 @@ class UserModel extends ElasticModel {
                         'filter': {
                             'bool': {
                                 'should': {'term': {[schema.field]: data}},
-                                "must_not": {'term': {'_id': model.id}}
-                            }
-                        }
-                    }
-                }
-            }
+                                'must_not': {'term': {'_id': model.id || ''}},
+                            },
+                        },
+                    },
+                },
+            },
         };
         const request = this.defaultOpt(querySearchField, false);
-        return this.client.search(request).then(response => {
+        return this.client.search(request).then((response) => {
             const total = response.hits.total;
             return !total;
         });
@@ -115,11 +115,11 @@ class UserModel extends ElasticModel {
                 'query': {
                     'constant_score': {
                         'filter': {
-                            'term': {'email': email}
-                        }
-                    }
-                }
-            }
+                            'term': {'email': email},
+                        },
+                    },
+                },
+            },
         };
         const request = this.defaultOpt(querySearchEmail, secured);
         return this.client.search(request)
@@ -133,14 +133,14 @@ class UserModel extends ElasticModel {
                 'from': from,
                 'query': {
                     'simple_query_string': {
-                        'query': `${searchText}*`
-                    }
-                }
-            }
+                        'query': `${searchText}*`,
+                    },
+                },
+            },
         });
 
         return this.client.search(request)
-            .then(result => this.adaptSearchResponse(result, size, from));
+            .then((result) => this.adaptSearchResponse(result, size, from));
     }
 
     validatePassword(cypherPassword, password) {
@@ -157,27 +157,27 @@ class UserModel extends ElasticModel {
 
     hashPasswordPromise(plaintextPassword) {
         return bcrypt.hash(plaintextPassword, saltRounds)
-            .then(hash => hash);
+            .then((hash) => hash);
     }
 
     comparePasswordPromise(plaintextPassword, hash) {
         return bcrypt.compare(plaintextPassword, hash)
-            .then(isSame => isSame);
+            .then((isSame) => isSame);
     }
 
     changePassword(id, plaintextPassword) {
-        return this.hashPasswordPromise(plaintextPassword).then(hashPassword => {
+        return this.hashPasswordPromise(plaintextPassword).then((hashPassword) => {
             const request = {
                 id,
                 body: {
                     doc: {
                         secured: {
-                            password: hashPassword
-                        }
-                    }
-                }
+                            password: hashPassword,
+                        },
+                    },
+                },
             };
-            return this.client.update(this.defaultOpt(request, true))
+            return this.client.update(this.defaultOpt(request, true));
         }).then(this.adaptResponse);
     }
 
@@ -191,7 +191,6 @@ class UserModel extends ElasticModel {
     logout() {
 
     }
-
 }
 
 const model = new UserModel();

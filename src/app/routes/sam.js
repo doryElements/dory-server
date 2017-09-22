@@ -3,11 +3,10 @@ const logger = require('../logger');
 
 const Router = require('koa-router');
 const router = new Router({
-    prefix: '/sams'
+    prefix: '/sams',
 });
 
 const Sam = require('../models/sam');
-
 
 
 // const manageError= function(ctx, next) {
@@ -23,7 +22,7 @@ const Sam = require('../models/sam');
  */
 router.get('/', (ctx, next) => {
     const queryString = ctx.query;
-    return Sam.getByParams(queryString.app, queryString.size, queryString.from).then(result =>{
+    return Sam.getByParams(queryString.app, queryString.size, queryString.from).then((result) =>{
         ctx.body = result;
         return result;
     });
@@ -32,8 +31,8 @@ router.get('/', (ctx, next) => {
 /**
  * Get all servers
  */
-router.get('/servers',(ctx,next)=>{
-    return Sam.getServers().then(result => {
+router.get('/servers', (ctx, next)=>{
+    return Sam.getServers().then((result) => {
         ctx.body = result;
         return result;
     });
@@ -42,19 +41,18 @@ router.get('/servers',(ctx,next)=>{
 /**
  * Get all databases
  */
-router.get('/dbs',(ctx,next)=>{
-    return Sam.getDatabases().then(result => {
+router.get('/dbs', (ctx, next)=>{
+    return Sam.getDatabases().then((result) => {
         ctx.body = result;
         return result;
     });
-
 });
 
 /**
  * Get app names for dropdown menu
  */
-router.get('/options',(ctx,next) => {
-   return Sam.getNames().then(result => {
+router.get('/options', (ctx, next) => {
+   return Sam.getNames().then((result) => {
        ctx.body = result;
        return result;
    });
@@ -63,9 +61,9 @@ router.get('/options',(ctx,next) => {
 /**
  * Get relations of an app
  */
-router.get('/relatives/:id',(ctx,next) => {
+router.get('/relatives/:id', (ctx, next) => {
     const id= ctx.params.id;
-    return Sam.getRelatives(id).then(result => {
+    return Sam.getRelatives(id).then((result) => {
         ctx.body = result;
         return result;
     });
@@ -77,7 +75,7 @@ router.get('/relatives/:id',(ctx,next) => {
 router.get('/:id', (ctx, next) => {
     const id = ctx.params.id;
     const version = ctx.query.version;
-    return Sam.getById({id, version}).then(result => {
+    return Sam.getById({id, version}).then((result) => {
         ctx.body = result;
         return result;
     });
@@ -90,18 +88,17 @@ router.get('/:id', (ctx, next) => {
 router.del('/:id', (ctx, next) => {
     const id = ctx.params.id;
     const version = ctx.query.version;
-    return Sam.delete(id, version).then(result => {
+    return Sam.delete(id, version).then((result) => {
         ctx.body = {message: 'delete', result};
         return result;
     });
-
 });
 
 
 /**
  * Create
  */
-router.post('/',  (ctx, next) => {
+router.post('/', (ctx, next) => {
     logger.debug('---------- state', ctx.state);
     const body = Sam.adaptBody(ctx.request.body);
 
@@ -113,7 +110,7 @@ router.post('/',  (ctx, next) => {
     // }
     // else{
         return Sam.create(body)
-            .then(result => {
+            .then((result) => {
                 ctx.body = result;
                 if (result.created) {
                     delete result.created;
@@ -154,7 +151,7 @@ router.put('/:id', (ctx, next) => {
     const version = ctx.query.version;
     const body = Sam.adaptBody(ctx.request.body);
     return Sam.update(body, id, version)
-        .then(result => {
+        .then((result) => {
             if (result.created) {
                 delete result.created;
                 ctx.status = 201;

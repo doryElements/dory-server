@@ -3,7 +3,7 @@ const logger = require('../logger');
 
 const Router = require('koa-router');
 const router = new Router({
-    prefix: '/users'
+    prefix: '/users',
 });
 
 const User = require('../models/user');
@@ -15,14 +15,11 @@ const crudRouter = require('./crudRouter')(User);
  */
 router.get('/', (ctx, next) => {
     const queryString = ctx.query;
-    return User.searchUserByText(queryString.search, queryString.size, queryString.from).then(result =>{
+    return User.searchUserByText(queryString.search, queryString.size, queryString.from).then((result) =>{
         ctx.body = result;
         return result;
     });
 });
-
-
-
 
 
 /**
