@@ -10,7 +10,7 @@ const path = require('path');
 const logger = require('./logger');
 //Server
 const http2 = require('http2');
-
+const events = require('events');
 /**
  * Koa dependencies.
  */
@@ -101,10 +101,14 @@ const certs = {
     key: fs.readFileSync(path.join(certsDirectory, 'server.key')),
     cert: fs.readFileSync(path.join(certsDirectory, 'server.crt'))
 };
-require('events').EventEmitter.defaultMaxListeners = 0;
+
+// Config NodesJs
+events.EventEmitter.defaultMaxListeners = 0;
+
+// Start Listeners
 http2.createServer(certs, app.callback()).listen(port, () => {
     logger.info('Magic  happens at https://localhost:' + port);
 });
-// app.listen(8080, () => {
-//     logger.info('Magic  happens at http://localhost:' + 8080);
-// });
+app.listen(8080, () => {
+    logger.info('Magic  happens at http://localhost:' + 8080);
+});
