@@ -1,7 +1,8 @@
-/* eslint-disable require-jsdoc */
 // Logger
 const logger = require('../logger');
 const ElasticModel = require('./elasticModel');
+
+// Utils
 const bcrypt = require('bcryptjs');
 
 
@@ -181,12 +182,12 @@ class UserModel extends ElasticModel {
     //     }).then(this.adaptResponse);
     // }
 
-    changePassword(id, plaintextPassword) {
+    changePassword(plaintextPassword, id, version) {
         return this.hashPasswordPromise(plaintextPassword).then((hashPassword) => {
             const data = {
                 secured: {password: hashPassword},
             };
-            return this._updatePartial(data, id);
+            return this._updatePartial(data, id, version);
         }).then(this.adaptResponse);
     }
 

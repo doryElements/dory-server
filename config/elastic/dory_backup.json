@@ -1,0 +1,7 @@
+{
+  "type": "fs",
+  "settings": {
+    "location": "/home/deostem/project/doryElements/dory-server/backups/dory_backup",
+    "compress": true
+  }
+}

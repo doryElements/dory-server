@@ -20,11 +20,11 @@ router.get('/', (ctx, next) => {
 router.put('/password', (ctx, next) => {
     const user = ctx.state.user;
     const userId = user.sub;
-
+    const version = ctx.query.version;
     const body = ctx.request.body;
     const password = body.password;
     console.log('Current user', userId);
-    return User.changePassword(userId, password).then((result)=> {
+    return User.changePassword(password, userId, version).then((result)=> {
         ctx.body ={response: result};
         return result;
     });
