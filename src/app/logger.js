@@ -18,7 +18,7 @@ winston.addColors({
     verbose: 'magenta',
     warn: 'yellow',
     warning: 'yellow',
-    error: 'red'
+    error: 'red',
 });
 
 const logger = new winston.Logger({
@@ -30,15 +30,15 @@ const logger = new winston.Logger({
             silent: false,
             timestamp: false,
             colorize: true,
-            json: false
+            json: false,
         }),
         new (winston.transports.DailyRotateFile)({
             level: config.logging.file.level,
             filename: 'dory.log',
             dirname: logDirectory,
             json: false,
-            zippedArchive: true
-        })
+            zippedArchive: true,
+        }),
     ],
     exceptionHandlers: [
         new (winston.transports.Console)({
@@ -48,17 +48,17 @@ const logger = new winston.Logger({
             silent: false,
             timestamp: true,
             colorize: true,
-            json: false
-        })
+            json: false,
+        }),
     ],
-    levels: {error: 0, warn: 1, info: 2, verbose: 3, debug: 4, trace: 5}
+    levels: {error: 0, warn: 1, info: 2, verbose: 3, debug: 4, trace: 5},
 });
 
 
 module.exports = logger;
 module.exports.stream = {
-    write: function (message, encoding) {
+    write: function(message, encoding) {
         logger.info(message);
-    }
+    },
 };
 module.exports.logDirectory = logDirectory;

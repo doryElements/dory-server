@@ -6,15 +6,13 @@ const rules = require('./access-rules');
 
 
 class CustomProvider extends Provider {
-
-
     getRoles(user) {
         return new Promise((resolve, reject) => {
             const roles = user.roles;
             let userRoles= {};
             if (roles) {
-                userRoles= roles.map(role => {
-                    return {[role]: {}}
+                userRoles= roles.map((role) => {
+                    return {[role]: {}};
                 });
             }
             logger.debug('...user', user, '==+> ', JSON.stringify( userRoles));
@@ -34,7 +32,6 @@ class CustomProvider extends Provider {
 }
 
 class CompositeProvider extends Provider {
-
     constructor(options) {
         super();
         this.custom = new CustomProvider(options);
@@ -47,7 +44,7 @@ class CompositeProvider extends Provider {
     }
 
     getPermissions(role) {
-        return  this.json.getPermissions(role);
+        return this.json.getPermissions(role);
         // return Promise.all([
         //     this.json.getPermissions(role),
         //     this.custom.getPermissions(role)
@@ -69,11 +66,11 @@ class CompositeProvider extends Provider {
 
 const options = {
     rbac: new rbac.RBAC({
-        provider: new CompositeProvider(rules)
+        provider: new CompositeProvider(rules),
     }),
-    identity: function (ctx) {
+    identity: function(ctx) {
         return ctx && ctx.state && ctx.state.user;
-    }
+    },
     // identity(ctx) { return ctx && ctx.user } // passes `user` to rbac-a provider
     // restrictionHandler(ctx, permissions, redirectUrl) { ctx.status = 403; }   // manually handle restricted responses
 };

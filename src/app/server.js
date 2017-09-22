@@ -8,7 +8,7 @@ const fs = require('fs');
 const path = require('path');
 // Logger
 const logger = require('./logger');
-//Server
+// Server
 const http2 = require('http2');
 const events = require('events');
 /**
@@ -80,7 +80,7 @@ app.use((ctx, next) => {
 // app.use(etag());
 
 // serve staticfiles
- const staticDirectory =  path.normalize( config.web.folder);
+ const staticDirectory = path.normalize( config.web.folder);
 logger.info('Serve static file ', staticDirectory, path.resolve(staticDirectory));
 const staticWeb =serve(staticDirectory);
 staticWeb.unless = unless;
@@ -99,7 +99,7 @@ app.use(apiRoutes.routes()).use(apiRoutes.allowedMethods());
 const certsDirectory = path.join(__dirname, '..', 'certs');
 const certs = {
     key: fs.readFileSync(path.join(certsDirectory, 'server.key')),
-    cert: fs.readFileSync(path.join(certsDirectory, 'server.crt'))
+    cert: fs.readFileSync(path.join(certsDirectory, 'server.crt')),
 };
 
 

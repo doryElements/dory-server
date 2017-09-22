@@ -1,14 +1,14 @@
 const logger = require('./logger');
 
-const passport = require("passport");
-const passportJWT = require("passport-jwt");
+const passport = require('passport');
+const passportJWT = require('passport-jwt');
 
 
 const uuidv4 = require('uuid/v4');
 
-const User = require("./models/user");
+const User = require('./models/user');
 
-const cfg = require("./config.js");
+const cfg = require('./config.js');
 
 const ExtractJwt = passportJWT.ExtractJwt;
 const JwtStrategy = passportJWT.Strategy;
@@ -27,46 +27,45 @@ const LocalStrategy = require('passport-local').Strategy;
 const jwtOptions = {
     secretOrKey: cfg.jwtSecret,
     jwtFromRequest: ExtractJwt.fromAuthHeader(),
-    audience: "dory"
+    audience: 'dory',
 };
 
-const cleanUserSecured =function (user) {
+const cleanUserSecured = function(user) {
     const cloneUser = JSON.parse(JSON.stringify(user));
     delete cloneUser.secured;
     return cloneUser;
 };
 
-const strategyValidateUsernamePassword= (req, email, password, done) => {
+const strategyValidateUsernamePassword = (req, email, password, done) => {
     logger.info('--- strategyLocal', email);
-    User.getByEmail({email, secured: true}).then(user => {
+    User.getByEmail({email, secured: true}).then((user) => {
         if (!user) {
-            return done(null, false, { message: 'Incorrect username.' });
+            return done(null, false, {message: 'Incorrect username.'});
         }
         if (!User.validatePassword(user.secured.password, password)) {
-            return done(null, false, { message: 'Incorrect password.' });
+            return done(null, false, {message: 'Incorrect password.'});
         }
         const payload = {
             jit: uuidv4(),
-            iss: "dory-server",
+            iss: 'dory-server',
             sub: user.id,
-            aud: "dory",
+            aud: 'dory',
             name: user.name,
-            email: user.email
+            email: user.email,
         };
 
         const secureUser = cleanUserSecured(user);
-        return done(null, secureUser,payload);
-    }).catch(err=> {
+        return done(null, secureUser, payload);
+    }).catch((err) => {
         return done(err);
     });
 };
 
 
 module.exports = function() {
-
     const strategyJwt = new JwtStrategy(jwtOptions, (payload, done) => {
         console.log(payload);
-        User.getById({id: payload.sub}).then(user => {
+        User.getById({id: payload.sub}).then((user) => {
             if (user) {
                 const secureUser = cleanUserSecured(user);
                 return done(null, secureUser, payload);
@@ -75,12 +74,12 @@ module.exports = function() {
                 // or you could create a new account
             }
         });
-            // if (err) {
-            //     return done(err, false);
-            // }
+        // if (err) {
+        //     return done(err, false);
+        // }
     });
 
-    const strategyLocal = new LocalStrategy({ passReqToCallback: true }, strategyValidateUsernamePassword);
+    const strategyLocal = new LocalStrategy({passReqToCallback: true}, strategyValidateUsernamePassword);
     passport.use('local', strategyLocal);
     passport.use(strategyJwt);
     return {
@@ -88,10 +87,10 @@ module.exports = function() {
             return passport.initialize();
         },
         authenticateLocal: function() {
-            return passport.authenticate('local', { session: false});
+            return passport.authenticate('local', {session: false});
         },
         authenticate: function() {
             return passport.authenticate('jwt', cfg.jwtSession);
-        }
+        },
     };
 };

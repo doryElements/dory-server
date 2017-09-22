@@ -1,28 +1,28 @@
 // config.js
 
-const configDory =  {
+const configDory = {
     jwt: {
         jwtSecret: 'superman est ridicule en collant de fille',
         expiration: '30m',
-        cookieName : 'dory-session'
+        cookieName: 'dory-session',
     },
     elasticsearch: {
         host: '127.0.0.1:9200',
         log: 'info',
-        keepAlive: true
+        keepAlive: true,
     },
     logging: {
         elasticsearch: true,
         file: {
-            level: 'info'
+            level: 'info',
         },
         console: {
-            level: 'debug'
-        }
+            level: 'debug',
+        },
     },
     web: {
-        folder: '../dory-app'
-    }
+        folder: '../dory-app',
+    },
 };
 
 // delete configDory.jwt.cookieName;
