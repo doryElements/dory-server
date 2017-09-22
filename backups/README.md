@@ -3,6 +3,7 @@ Elasticsearch config
 
 ## Snapshot & Backup
 Doc: https://www.elastic.co/guide/en/elasticsearch/reference/2.4/modules-snapshots.html
+TODO: https://www.elastic.co/guide/en/elasticsearch/reference/5.0/indices-rollover-index.html
 
 Need Config in elasticsearch.yml
 
