@@ -144,6 +144,12 @@ class ElasticModel {
             }).then((request) => client.index(this.defaultOpt(request, true)))
             .then(this.adaptResponse);
     }
+    _updatePartial(data, id, version) {
+        const body = {
+            body: {doc: data},
+        };
+        return this.client.update(this.defaultOpt({id, version, body}, true));
+    }
 
     update(data, id, version) {
         return this.validate(data)
@@ -157,5 +163,4 @@ class ElasticModel {
     }
 }
 
-module
-    .exports = ElasticModel;
+module.exports = ElasticModel;

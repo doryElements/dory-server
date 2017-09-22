@@ -165,19 +165,28 @@ class UserModel extends ElasticModel {
             .then((isSame) => isSame);
     }
 
+    // changePassword(id, plaintextPassword) {
+    //     return this.hashPasswordPromise(plaintextPassword).then((hashPassword) => {
+    //         const request = {
+    //             id,
+    //             body: {
+    //                 doc: {
+    //                     secured: {
+    //                         password: hashPassword,
+    //                     },
+    //                 },
+    //             },
+    //         };
+    //         return this.client.update(this.defaultOpt(request, true));
+    //     }).then(this.adaptResponse);
+    // }
+
     changePassword(id, plaintextPassword) {
         return this.hashPasswordPromise(plaintextPassword).then((hashPassword) => {
-            const request = {
-                id,
-                body: {
-                    doc: {
-                        secured: {
-                            password: hashPassword,
-                        },
-                    },
-                },
+            const data = {
+                secured: {password: hashPassword},
             };
-            return this.client.update(this.defaultOpt(request, true));
+            return this._updatePartial(data, id);
         }).then(this.adaptResponse);
     }
 
