@@ -12,6 +12,9 @@ bower_components
 node_modules
 package-lock.json
 
+# packaging
+/dist
+
 # Data
 /backups/**
 /data/**

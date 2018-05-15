@@ -1,7 +1,6 @@
 const logger = require('../logger');
 const client = require('./elasticClient');
 // Validator
-// const setupAsync = require('ajv-async');
 const localize = require('ajv-i18n');
 
 // Validation
